@@ -7,7 +7,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const SOURCE_PATH = './dev/';
 const PUBLIC_PATH = './public/';
-const TEMPLATE_PATH = './dev/template/';
+const TEMPLATE_PATH = './dev/';
 const MEDIA_PATH = './dev/media/';
 const PORT = 3000;
 module.exports = {

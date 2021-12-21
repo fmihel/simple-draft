@@ -6,7 +6,7 @@
   "scripts": {
     "run-dev": "webpack-dev-server --config webpack.config.dev.js",
     "build": "webpack && webpack --prod",
-    "git-push": "git push simpe-draft && git push simple-draft --tag",
+    "git-push": "git push simple-draft && git push simple-draft --tag",
     "npm-publish-patch": "npm run build && npm version patch && npm publish && npm run git-push",
     "npm-publish-minor": "npm run build && npm version minor && npm publish && npm run git-push",
     "npm-publish-major": "npm run build && npm version major && npm publish && npm run git-push"
@@ -29,6 +29,14 @@
     "url": "https://github.com/fmihel/simple-draft/issues"
   },
   "homepage": "https://github.com/fmihel/simple-draft#readme",
+  "peerDependencies": {
+    "fmihel-polyfills": ">=0.2.0",
+    "fmihel-browser-lib": "^1.15.0",
+    "jquery": "^3.4.1",
+    "react": ">=16.13.1",
+    "react-dom": ">=16.13.1",
+    "lodash": "^4.17.16"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
