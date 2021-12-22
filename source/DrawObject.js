@@ -13,9 +13,15 @@ export default class DrawObject {
 
     move(x, y) {}
 
+    select(select = true) {}
+
     mouseMove(o) {}
 
     mouseDown(o) {}
 
     mouseUp(o) {}
+
+    eq(obj) {
+        return (obj && (obj.id === this.id));
+    }
 }

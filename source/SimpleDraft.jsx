@@ -1,6 +1,6 @@
 import React from 'react';
 import { binds } from 'fmihel-browser-lib';
-import Draws from './Draws';
+import Draft from './Draft';
 import DrawLine from './DrawLine';
 import Draw from './Draw';
 
@@ -9,6 +9,7 @@ export default class SimpleDraft extends React.Component {
         super(p);
         binds(this, 'onContextMenu');
         this.draw = undefined;
+        this.draft = undefined;
         this.refCanvas = React.createRef();
     }
 
@@ -21,19 +22,8 @@ export default class SimpleDraft extends React.Component {
     componentDidMount() {
         // разовый вызов после первого рендеринга
         this.draw = new Draw(this.refCanvas.current);
-        this.draw.animate(() => {
-            const { draw } = this;
-            draw.grid(20);
-            draw.color('#ff0000');
-            draw.text('(-20;-30)', -20, -30);
-            draw.circle(-20, -30, 2);
-            draw.text('(0;0)', 0, -10);
-            draw.text('X', 100, -10);
-            draw.text('Y', -10, 100);
-            draw.line(-250, 0, 250, 0);
-            draw.line(0, -250, 0, 250);
-            draw.point(10, 10);
-        });
+        this.draft = new Draft(this.draw);
+        this.draft.render();
     }
 
     componentWillUnmount() {
@@ -45,21 +35,45 @@ export default class SimpleDraft extends React.Component {
     }
 
     render() {
-        const { id } = this.props;
+        const { id, style } = this.props;
         return (
-            <canvas
-                id={id}
-                ref = {this.refCanvas}
-                onContextMenu={this.onContextMenu}
-                style={{
-                    width: 300,
-                    height: 200,
-                }}
-            />
+            <React.Fragment>
+                <div className="panel">
+                    <button
+                        onClick={() => {
+                            this.draft.current('free');
+                        }}
+                    >view</button>
+                    <button
+                        onClick={() => {
+                            this.draft.add(new DrawLine(), true);
+                        }}
+                    >line</button>
+                </div>
+                <div
+                    className="canvas-frame"
+                    id={id}
+                    style={{
+                        padding: 0,
+                        margin: 0,
+                        width: 500,
+                        height: 200,
+                        ...style,
+                        border: '1px dashed red',
+                    }}
+                >
+                    <canvas
+                        id={id}
+                        ref = {this.refCanvas}
+                        onContextMenu={this.onContextMenu}
+
+                    />
+                </div>
+            </React.Fragment>
         );
     }
 }
 SimpleDraft.defaultProps = {
     id: 'canvas',
-
+    style: {},
 };

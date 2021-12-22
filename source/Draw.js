@@ -8,13 +8,8 @@ export default class Draw {
         this.owner = ownerDOM;
         this.parent = parentDOM(ownerDOM);
         this.canvas = this.owner.getContext('2d');
-        this.resizeObserver = new ResizeObserver((o) => {
-            this.resize();
-        });
-        this.resizeObserver.observe(this.parent);
         this.buffer = [];
         this.listStore = [];
-        this.resize(true);
 
         this.onMove = undefined;
         this.onMouseDown = undefined;
@@ -23,6 +18,13 @@ export default class Draw {
         ownerDOM.addEventListener('mousemove', this._doMove);
         ownerDOM.addEventListener('mousedown', this._doMouseDown);
         ownerDOM.addEventListener('mouseup', this._doMouseUp);
+
+        this.resizeObserver = new ResizeObserver(() => {
+            this.resize();
+        });
+        this.resizeObserver.observe(this.parent);
+
+        this.resize();
     }
 
     _doMove(o) {
@@ -81,12 +83,11 @@ export default class Draw {
         }
         //        this.timerOut = setTimeout(() => {
         this.timerOut = undefined;
-        const size = JX.pos(this.parent);
 
-        this.owner.width = size.w - 5;
-        this.owner.height = size.h - 5;
-
-        this.out();
+        this.owner.width = this.parent.clientWidth;
+        this.owner.height = this.parent.clientHeight;
+        this.updateSC();
+        // this.out();
         //        }, 10);
     }
 
@@ -240,7 +241,7 @@ export default class Draw {
     }
 
     animate(event, param) {
-        if (this.timerAnimate) return;
+        if (this.timerAnimate) { return; }
         const p = {
             delay: 100,
             stopStep: 0,

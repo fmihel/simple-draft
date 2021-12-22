@@ -1,13 +1,13 @@
 /* eslint-disable eqeqeq */
 export default class DrawUtils {
-    static inArea(x, x1, x2, strong = true) {
+    static inLine(x, x1, x2, strong = true) {
         if (x1 < x2) {
             return strong ? (x1 <= x && x <= x2) : (x1 < x && x < x2);
         }
         return strong ? (x2 <= x && x >= x1) : (x2 < x && x < x1);
     }
 
-    static deq(a, a1, d = 1) { return DrawUtils.inArea(a, a1 - d, a1 + d); }
+    static deq(a, a1, d = 1) { return DrawUtils.inLine(a, a1 - d, a1 + d); }
 
     static IsPointOnLine(x, y, z, x1, y1, z1, x2, y2, z2, d = 3) {
         let result = false;
@@ -29,5 +29,9 @@ export default class DrawUtils {
         }
 
         return result;
+    }
+
+    static inBox(x, y, x1, y1, x2, y2, strong = true) {
+        return DrawUtils.inLine(x, x1, x2, strong) && DrawUtils.inLine(y, y1, y2, strong);
     }
 }
