@@ -153,6 +153,10 @@ export default class Draw {
         this.canvas.strokeStyle = o.color;
     }
 
+    _lineWidth(o) {
+        this.canvas.lineWidth = o.lineWidth;
+    }
+
     _fill(o) {
         this.canvas.fillStyle = o.color;
     }
@@ -358,6 +362,8 @@ export default class Draw {
                 this._box(o);
             } else if (o.arrowVH) {
                 this._arrowVH(o);
+            } else if (o.lineWidth) {
+                this._lineWidth(o);
             }
         });
     }
@@ -424,5 +430,9 @@ export default class Draw {
                 vert, a, a1, a2, d, left, right, color,
             },
         });
+    }
+
+    lineWidth(lineWidth) {
+        this.saveCommand({ lineWidth });
     }
 }

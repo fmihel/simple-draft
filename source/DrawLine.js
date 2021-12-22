@@ -43,6 +43,7 @@ export default class DrawLine extends DrawObject {
 
     draw() {
         const d = this.owner.drawer;
+        d.lineWidth(3);
         if (this.owner.hover && this.owner.hover === this) d.color('red');
         else d.color('black');
         if (this.state === 'add' || this.state === 'modif') {
@@ -67,6 +68,20 @@ export default class DrawLine extends DrawObject {
         if (this.state === 'add' && last) {
             d.color('silver');
             d.line(last.x, last.y, this.mouse.x, this.mouse.y);
+        }
+        d.lineWidth(1);
+    }
+
+    drawGabarit(vert, x1, y1, x2, y2, off, text) {
+        const d = this.owner.drawer;
+        d.color('silver');
+        d.lineWidth(1);
+        if (vert) {
+
+        } else {
+            d.line(x1, y1 + 8, x1, off - 8);
+            d.line(x2, y2 + 8, x2, off - 8);
+            d.arrowVH(false, off, x1, x2, 3, true, true, 'silver');
         }
     }
 
@@ -125,6 +140,28 @@ export default class DrawLine extends DrawObject {
                 list[i].y + nodeSize)) {
                 return list[i];
             }
+        }
+        return false;
+    }
+
+    getGabarit() {
+        if (this.list.length > 1 && (this.gabarit.vert || this.gabarit.right)) {
+            const out = {
+                horiz: {},
+                vert: {},
+            };
+            this.list.map((it, i) => {
+                if (i === 0) {
+                    out.horiz = { max: it, min: it };
+                    out.vert = { max: it, min: it };
+                } else {
+                    if (out.horiz.max.x < it.x) out.horiz.max = it;
+                    if (out.horiz.min.x > it.x) out.horiz.min = it;
+                    if (out.vert.max.y < it.y) out.vert.max = it;
+                    if (out.vert.min.y > it.y) out.vert.min = it;
+                }
+            });
+            return out;
         }
         return false;
     }

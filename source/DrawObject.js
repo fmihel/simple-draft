@@ -24,4 +24,8 @@ export default class DrawObject {
     eq(obj) {
         return (obj && (obj.id === this.id));
     }
+
+    getGabarit() {
+
+    }
 }
