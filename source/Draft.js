@@ -27,6 +27,10 @@ export default class Draft {
         this.list.map((it) => it.draw());
     }
 
+    _drawGabarit() {
+
+    }
+
     current(setNew = undefined) {
         if (setNew === 'free') {
             if (this._current) this._current.select(false);
@@ -47,11 +51,18 @@ export default class Draft {
     }
 
     mouseDown(o) {
+        if (this.hover && this._current !== !this.hover) {
+            this.current(this.hover);
+        }
+        if (this._current) {
+            this._current.mouseDown(o);
+        }
+        /*
         if (!this._current && this.hover) {
             this.current(this.hover);
         } else if (this._current) {
             this._current.mouseDown(o);
-        }
+        } */
     }
 
     mouseUp(o) {
@@ -72,6 +83,9 @@ export default class Draft {
             draw.text('Y', -10, 100);
             draw.line(-250, 0, 250, 0);
             draw.line(0, -250, 0, 250);
+
+            // draw.arrowVH(false, 20, -40, 20, 3, true, true, 'blue');
+            // draw.arrowVH(true, 40, -40, 20, 3, true, true, 'blue');
             this.draw();
         });
     }

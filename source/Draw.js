@@ -14,6 +14,7 @@ export default class Draw {
         this.onMove = undefined;
         this.onMouseDown = undefined;
         this.onMouseUp = undefined;
+        this.pressed = -1;
 
         ownerDOM.addEventListener('mousemove', this._doMove);
         ownerDOM.addEventListener('mousedown', this._doMouseDown);
@@ -30,6 +31,7 @@ export default class Draw {
     _doMove(o) {
         if (this.onMove) {
             this.onMove({
+                pressed: this.pressed,
                 button: o.button,
                 x: this.localX(o.offsetX),
                 y: this.localY(o.offsetY),
@@ -38,9 +40,11 @@ export default class Draw {
     }
 
     _doMouseDown(o) {
+        this.pressed = o.button;
         if (this.onMouseDown) {
             this.onMouseDown({
                 button: o.button,
+                pressed: this.pressed,
                 x: this.localX(o.offsetX),
                 y: this.localY(o.offsetY),
             });
@@ -48,8 +52,10 @@ export default class Draw {
     }
 
     _doMouseUp(o) {
+        this.pressed = -1;
         if (this.onMouseUp) {
             this.onMouseUp({
+                pressed: this.pressed,
                 button: o.button,
                 x: this.localX(o.offsetX),
                 y: this.localY(o.offsetY),
@@ -204,6 +210,21 @@ export default class Draw {
         this._reStore('color', o.grid.color);
     }
 
+    _box(o) {
+        const b = o.box;
+        this._store('color', b.color);
+        this.canvas.beginPath();
+        this.canvas.moveTo(this.worldX(b.x1), this.worldY(b.y1));
+        this.canvas.lineTo(this.worldX(b.x2), this.worldY(b.y1));
+        this.canvas.lineTo(this.worldX(b.x2), this.worldY(b.y2));
+        this.canvas.lineTo(this.worldX(b.x1), this.worldY(b.y2));
+        this.canvas.lineTo(this.worldX(b.x1), this.worldY(b.y1));
+
+        this.canvas.stroke();
+        this.canvas.closePath();
+        this._reStore('color', b.color);
+    }
+
     _point(o) {
         this._store('color', o.point.color);
         this.canvas.beginPath();
@@ -232,6 +253,50 @@ export default class Draw {
         this.canvas.arc(this.worldX(o.circle.x), this.worldY(o.circle.y), o.circle.r, 0, 2 * Math.PI);
         this.canvas.stroke();
         this._reStore('color', o.circle.color);
+    }
+
+    _arrowVH(o) {
+        // vert,a,b1,b2,d,left,right,color
+        const a = o.arrowVH;
+        this._store('color', a.color);
+        let x1; let x2; let y1; let y2; let left; let right;
+        if (a.vert) {
+            x1 = this.worldX(a.a);
+            x2 = x1;
+            y1 = this.worldY(a.a1);
+            y2 = this.worldY(a.a2);
+            left = a.left ? [x1 - a.d, y1 - 2 * a.d, x1, y1, x1 + a.d, y1 - 2 * a.d] : false;
+            right = a.right ? [x1 - a.d, y2 + 2 * a.d, x1, y2, x1 + a.d, y2 + 2 * a.d] : false;
+        } else {
+            x1 = this.worldX(a.a1);
+            x2 = this.worldX(a.a2);
+            y1 = this.worldY(a.a);
+            y2 = y1;
+            left = a.left ? [x1 + 2 * a.d, y1 - a.d, x1, y1, x1 + 2 * a.d, y1 + a.d] : false;
+            right = a.right ? [x2 - 2 * a.d, y2 - a.d, x2, y2, x2 - 2 * a.d, y2 + a.d] : false;
+        }
+        this.canvas.beginPath();
+        this.canvas.moveTo(x1, y1);
+        this.canvas.lineTo(x2, y2);
+        this.canvas.stroke();
+        this.canvas.closePath();
+        if (left) {
+            this.canvas.beginPath();
+            this.canvas.moveTo(left[0], left[1]);
+            this.canvas.lineTo(left[2], left[3]);
+            this.canvas.lineTo(left[4], left[5]);
+            this.canvas.stroke();
+            this.canvas.closePath();
+        }
+        if (right) {
+            this.canvas.beginPath();
+            this.canvas.moveTo(right[0], right[1]);
+            this.canvas.lineTo(right[2], right[3]);
+            this.canvas.lineTo(right[4], right[5]);
+            this.canvas.stroke();
+            this.canvas.closePath();
+        }
+        this._reStore('color', a.color);
     }
 
     clear() {
@@ -289,6 +354,10 @@ export default class Draw {
                 this._text(o);
             } else if (o.circle) {
                 this._circle(o);
+            } else if (o.box) {
+                this._box(o);
+            } else if (o.arrowVH) {
+                this._arrowVH(o);
             }
         });
     }
@@ -337,6 +406,22 @@ export default class Draw {
         this.saveCommand({
             circle: {
                 x, y, r, color,
+            },
+        });
+    }
+
+    box(x1, y1, x2, y2, color = 'black') {
+        this.saveCommand({
+            box: {
+                x1, y1, x2, y2, color,
+            },
+        });
+    }
+
+    arrowVH(vert, a, a1, a2, d, left, right, color = 'black') {
+        this.saveCommand({
+            arrowVH: {
+                vert, a, a1, a2, d, left, right, color,
             },
         });
     }
