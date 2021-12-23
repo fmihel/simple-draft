@@ -171,6 +171,20 @@ export default class Draw {
         this._reStore('color', o.line.color);
     }
 
+    _fillRect(o) {
+        this._store('fill', o.fillRect.color);
+        const x = this.worldX(o.fillRect.x1);
+        const y = this.worldY(o.fillRect.y1);
+
+        this.canvas.fillRect(
+            x,
+            y,
+            this.worldX(o.fillRect.x2) - x,
+            this.worldY(o.fillRect.y2) - y,
+        );
+        this._reStore('fill', o.fillRect.color);
+    }
+
     _grid(o) {
         this._store('color', o.grid.color);
         let left = 0;
@@ -364,6 +378,8 @@ export default class Draw {
                 this._arrowVH(o);
             } else if (o.lineWidth) {
                 this._lineWidth(o);
+            } else if (o.fillRect) {
+                this._fillRect(o);
             }
         });
     }
@@ -434,5 +450,13 @@ export default class Draw {
 
     lineWidth(lineWidth) {
         this.saveCommand({ lineWidth });
+    }
+
+    fillRect(x1, y1, x2, y2, color = 'white') {
+        this.saveCommand({
+            fillRect: {
+                x1, y1, x2, y2, color,
+            },
+        });
     }
 }

@@ -1,10 +1,13 @@
 /* eslint-disable eqeqeq */
 export default class DrawUtils {
-    static inLine(x, x1, x2, strong = true) {
-        if (x1 < x2) {
-            return strong ? (x1 <= x && x <= x2) : (x1 < x && x < x2);
+    static inLine(x, x1, x2, strong = true, off = 0) {
+        if (x1 === x2 && off === 0) {
+            return x1 === x;
         }
-        return strong ? (x2 <= x && x >= x1) : (x2 < x && x < x1);
+        if (x1 < x2) {
+            return strong ? ((x1 - off) <= x && x <= (x2 + off)) : ((x1 - off) < x && x < (x2 + off));
+        }
+        return strong ? ((x2 - off) <= x && x <= (x1 + off)) : ((x2 - off) < x && x < (x1 + off));
     }
 
     static deq(a, a1, d = 1) { return DrawUtils.inLine(a, a1 - d, a1 + d); }

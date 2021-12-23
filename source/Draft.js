@@ -25,7 +25,7 @@ export default class Draft {
 
     draw() {
         this.list.map((it) => it.draw());
-        this._drawGabarit();
+        // this._drawGabarit();
     }
 
     _drawGabarit() {
@@ -102,8 +102,8 @@ export default class Draft {
             // draw.text('(0;0)', 0, -10);
             // draw.text('X', 100, -10);
             // draw.text('Y', -10, 100);
-            draw.line(-25, 0, 25, 0);
-            draw.line(0, -25, 0, 25);
+            // draw.line(-25, 0, 25, 0);
+            // draw.line(0, -25, 0, 25);
 
             // draw.arrowVH(false, 20, -40, 20, 3, true, true, 'blue');
             // draw.arrowVH(true, 40, -40, 20, 3, true, true, 'blue');

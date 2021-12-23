@@ -2,6 +2,7 @@ import React from 'react';
 import { binds } from 'fmihel-browser-lib';
 import Draft from './Draft';
 import DrawLine from './DrawLine';
+import DrawSize from './DrawSize';
 import Draw from './Draw';
 
 export default class SimpleDraft extends React.Component {
@@ -49,6 +50,16 @@ export default class SimpleDraft extends React.Component {
                             this.draft.add(new DrawLine(), true);
                         }}
                     >line</button>
+                    <button
+                        onClick={() => {
+                            this.draft.add(new DrawSize(true), true);
+                        }}
+                    >size V</button>
+                    <button
+                        onClick={() => {
+                            this.draft.add(new DrawSize(false), true);
+                        }}
+                    >size H</button>
                 </div>
                 <div
                     className="canvas-frame"
