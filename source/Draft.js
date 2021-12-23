@@ -11,6 +11,7 @@ export default class Draft {
         this.drawer.onMove = this.mouseMove;
         this.drawer.onMouseDown = this.mouseDown;
         this.drawer.onMouseUp = this.mouseUp;
+        this.onSelect = undefined;
     }
 
     add(o, asCurrent = false) {
@@ -56,10 +57,16 @@ export default class Draft {
         if (setNew === 'free') {
             if (this._current) this._current.select(false);
             this._current = undefined;
+            if (this.onSelect) {
+                this.onSelect({ sender: this, current: undefined });
+            }
         } else if (setNew) {
             if (this._current) this._current.select(false);
             this._current = setNew;
             this._current.select();
+            if (this.onSelect) {
+                this.onSelect({ sender: this, current: this._current });
+            }
         }
         return this._current;
     }
@@ -109,5 +116,13 @@ export default class Draft {
             // draw.arrowVH(true, 40, -40, 20, 3, true, true, 'blue');
             this.draw();
         });
+    }
+
+    delete() {
+        if (this._current) {
+            const del = this._current;
+            this.current('free');
+            this.list = this.list.filter((it) => !it.eq(del));
+        }
     }
 }

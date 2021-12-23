@@ -8,10 +8,15 @@ import Draw from './Draw';
 export default class SimpleDraft extends React.Component {
     constructor(p) {
         super(p);
-        binds(this, 'onContextMenu');
+        binds(this, 'onContextMenu', 'onChange', 'onSelect');
         this.draw = undefined;
         this.draft = undefined;
         this.refCanvas = React.createRef();
+
+        this.current = undefined;
+        this.state = {
+            len: '',
+        };
     }
 
     onContextMenu(o) {
@@ -20,11 +25,29 @@ export default class SimpleDraft extends React.Component {
         return false;
     }
 
+    onChange(o) {
+        // if (this.current.data && this.current.data.text = o.ta)
+        this.setState({ len: o.target.value });
+        if (this.current && (this.current instanceof DrawSize)) {
+            this.current.data.text = o.target.value;
+        }
+    }
+
+    onSelect(o) {
+        this.current = o.current;
+        if (this.current && (this.current instanceof DrawSize)) {
+            this.setState({ len: this.current.data.text });
+        } else this.setState({ len: '' });
+    }
+
     componentDidMount() {
         // разовый вызов после первого рендеринга
         this.draw = new Draw(this.refCanvas.current);
         this.draft = new Draft(this.draw);
+
+        this.draft.onSelect = this.onSelect;
         this.draft.render();
+        this.draft.add(new DrawLine(), true);
     }
 
     componentWillUnmount() {
@@ -37,6 +60,7 @@ export default class SimpleDraft extends React.Component {
 
     render() {
         const { id, style } = this.props;
+        const { len } = this.state;
         return (
             <React.Fragment>
                 <div className="panel">
@@ -60,6 +84,14 @@ export default class SimpleDraft extends React.Component {
                             this.draft.add(new DrawSize(false), true);
                         }}
                     >size H</button>
+                    {this.current
+                    && <button
+                        onClick={() => {
+                            this.draft.delete();
+                        }}
+                    >delete</button>
+                    }
+                    {(this.current && this.current instanceof DrawSize) && <input type="text" onChange={this.onChange} value={len}/>}
                 </div>
                 <div
                     className="canvas-frame"

@@ -1,7 +1,9 @@
+import DrawObject from './DrawObject';
 import DrawUtils from './DrawUtils';
 
-export default class DrawSize {
+export default class DrawSize extends DrawObject {
     constructor(vert = true) {
+        super();
         // this.owner = undefined;
         // this.state = 'draw';
         // this.id = Math.floor(Math.random() * 100000);
@@ -94,7 +96,8 @@ export default class DrawSize {
             textPos.x + data.text.length * 5 + 10,
             textPos.y + charH,
             'white');
-        d.text(data.text, textPos.x, textPos.y, color, 12);
+
+        d.text(data.text, textPos.x, textPos.y, 'black', 12);
     }
 
     move(x, y) {}

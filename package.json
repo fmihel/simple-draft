@@ -5,6 +5,7 @@
   "main": "dist/simple-draft.min.js",
   "scripts": {
     "run-dev": "webpack-dev-server --config webpack.config.dev.js",
+    "build-dev": "webpack --config webpack.config.dev.js",
     "build": "webpack && webpack --prod",
     "git-push": "git push simple-draft && git push simple-draft --tag",
     "npm-publish-patch": "npm run build && npm version patch && npm publish && npm run git-push",
