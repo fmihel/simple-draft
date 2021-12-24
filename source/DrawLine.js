@@ -22,7 +22,7 @@ export default class DrawLine extends DrawObject {
     underCursor(x, y) {
         const { list } = this;
         for (let i = 1; i < list.length; i++) {
-            if (DrawUtils.IsPointOnLine(x, y, 0, list[i].x, list[i].y, 0, list[i - 1].x, list[i - 1].y, 0, 5)) {
+            if (DrawUtils.IsPointOnLine(x, y, list[i].x, list[i].y, list[i - 1].x, list[i - 1].y)) {
                 return true;
             }
         }

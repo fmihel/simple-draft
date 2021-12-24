@@ -58,7 +58,7 @@ export default class DrawSize extends DrawObject {
     draw() {
         const { state, data } = this;
         const d = this.owner.drawer;
-        const color = state === 'draw' ? 'gray' : 'black';
+        const color = state === 'draw' ? 'gray' : 'red';
 
         if (state === 'draw') {
             if (data.vert) {

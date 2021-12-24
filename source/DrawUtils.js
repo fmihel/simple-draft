@@ -1,3 +1,5 @@
+import Draw from './Draw';
+
 /* eslint-disable eqeqeq */
 export default class DrawUtils {
     static inLine(x, x1, x2, strong = true, off = 0) {
@@ -10,25 +12,24 @@ export default class DrawUtils {
         return strong ? ((x2 - off) <= x && x <= (x1 + off)) : ((x2 - off) < x && x < (x1 + off));
     }
 
-    static deq(a, a1, d = 1) { return DrawUtils.inLine(a, a1 - d, a1 + d); }
+    static deq(a, a1, plusMinus = 1) { return DrawUtils.inLine(a, a1 - plusMinus, a1 + plusMinus); }
 
-    static IsPointOnLine(x, y, z, x1, y1, z1, x2, y2, z2, d = 3) {
+    static IsPointOnLine(x, y, x1, y1, x2, y2, plusMinus = 5) {
         let result = false;
 
-        if ((x1 == x2) && (y1 == y2) && (z1 == z2)) {
-            return false;
+        // точка
+        if (DrawUtils.deq(x1, x2, plusMinus) && DrawUtils.deq(y1, y2, plusMinus)) {
+            return (DrawUtils.deq(x, x1, plusMinus) && DrawUtils.deq(y, y1, plusMinus)) || (DrawUtils.deq(x, x2, plusMinus) && DrawUtils.deq(y, y2, plusMinus));
         }
-        if (x1 == x2) {
-            result = (x == x1);
-            if (y1 == y2) {
-                result = result && (y == y1);
-            } else {
-                result = result && ((z - z1) * (y2 - y1) == (z2 - z1) * (y - y1));
-            }
-        } else {
-            const t = (x - x1) / (x2 - x1);
-            result = (z == (z1 + t * (z2 - z1)));
-            result = result && (DrawUtils.deq(y, (y1 + t * (y2 - y1)), d));
+
+        // линия вертикальная
+        if (DrawUtils.deq(x1, x2, plusMinus)) {
+            result = DrawUtils.inLine(x, x1, x2, true, plusMinus) && DrawUtils.inLine(y, y1, y2, true, plusMinus);
+        } else if (DrawUtils.inLine(x, x1, x2, true, plusMinus)) {
+            const k = (y1 - y2) / (x1 - x2);
+            const b = y1 - x1 * k;
+            const yeq = k * x + b;
+            result = DrawUtils.deq(y, yeq, plusMinus);
         }
 
         return result;

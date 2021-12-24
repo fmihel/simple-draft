@@ -72,13 +72,21 @@ export default class Draft {
     }
 
     mouseMove(o) {
-        this.hover = this.list.find((it) => it.underCursor(o.x, o.y));
+        this.hover = undefined;
         if (this._current) {
             this._current.mouseMove(o);
+            if (!this._current.underCursor(o.x, o.y)) {
+                this.hover = this.list.find((it) => it.underCursor(o.x, o.y));
+            }
+        } else {
+            this.hover = this.list.find((it) => it.underCursor(o.x, o.y));
         }
     }
 
     mouseDown(o) {
+        if (o.button == 2) {
+            this.current('free');
+        }
         if (this.hover && this._current !== !this.hover) {
             this.current(this.hover);
         }
