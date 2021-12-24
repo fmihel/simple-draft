@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import DrawObject from './DrawObject';
 import DrawUtils from './DrawUtils';
 
@@ -67,7 +68,7 @@ export default class DrawLine extends DrawObject {
 
         if (this.state === 'add' && last) {
             d.color('silver');
-            d.line(last.x, last.y, this.mouse.x, this.mouse.y);
+            d.line(last.x, last.y, DrawUtils.round(this.mouse.x), DrawUtils.round(this.mouse.y));
         }
         d.lineWidth(1);
     }
@@ -87,7 +88,10 @@ export default class DrawLine extends DrawObject {
 
     move(x, y) {}
 
-    mouseMove(o) {
+    // вариант модификации без прилипания к сетке
+    mouseMove_v1(o) {
+        // const o = { ...a, x: DrawUtils.round(a.x), y: DrawUtils.round(a.y) };
+        // const o = { ...a };
         this.mouse = { ...o };
         if (this.state === 'modif') {
             if (o.pressed === 0) {
@@ -100,6 +104,31 @@ export default class DrawLine extends DrawObject {
                     this.list = this.list.map((it) => ({ ...it, x: it.x - dx, y: it.y - dy }));
                 }
                 this.fixMouseCoord = { ...o };
+            } else {
+                this.nodeModif = this._hoverNode(o.x, o.y);
+            }
+        }
+    }
+
+    mouseMove(o) {
+        // const o = { ...a, x: DrawUtils.round(a.x), y: DrawUtils.round(a.y) };
+        // const o = { ...a };
+        this.mouse = { ...o };
+        if (this.state === 'modif') {
+            if (o.pressed === 0) {
+                if (this.nodeModif) {
+                    const a = { ...o, x: DrawUtils.round(o.x), y: DrawUtils.round(o.y) };
+                    const dx = this.fixMouseCoord.x - a.x;
+                    const dy = this.fixMouseCoord.y - a.y;
+                    this.nodeModif.x -= dx;
+                    this.nodeModif.y -= dy;
+                    this.fixMouseCoord = { ...a };
+                } else {
+                    const dx = this.fixMouseCoord.x - o.x;
+                    const dy = this.fixMouseCoord.y - o.y;
+                    this.list = this.list.map((it) => ({ ...it, x: it.x - dx, y: it.y - dy }));
+                    this.fixMouseCoord = { ...o };
+                }
             } else {
                 this.nodeModif = this._hoverNode(o.x, o.y);
             }
@@ -122,7 +151,7 @@ export default class DrawLine extends DrawObject {
     mouseUp(o) {
         this.isButtonDown = false;
         if (this.state === 'add') {
-            this.add(o);
+            this.add({ ...o, x: DrawUtils.round(o.x), y: DrawUtils.round(o.y) });
         }
         if (this.state === 'node-modif') {
             this.nodeModif = false;

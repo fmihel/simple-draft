@@ -38,4 +38,8 @@ export default class DrawUtils {
     static inBox(x, y, x1, y1, x2, y2, strong = true) {
         return DrawUtils.inLine(x, x1, x2, strong) && DrawUtils.inLine(y, y1, y2, strong);
     }
+
+    static round(x, k = 10) {
+        return Math.round(x / k) * k;
+    }
 }
