@@ -18,6 +18,13 @@ class App extends React.Component {
         return (
             <div className={'test'}>
                 <SimpleDraft/>
+                <div style={{ marginTop: 10, color: 'black' }}>
+                    [view] - просмотр результатат ( сброс курсора)<br/>
+                    [line] - войти в режим рисования кривой<br/>
+                    [size V] - добавить размер по вертикали<br/>
+                    [size H] - добавить размер по горизонтали<br/>
+
+                </div>
             </div>
         );
     }
