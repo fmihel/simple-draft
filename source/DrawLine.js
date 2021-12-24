@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { compact } from 'lodash';
 import DrawObject from './DrawObject';
 import DrawUtils from './DrawUtils';
 
@@ -30,8 +31,13 @@ export default class DrawLine extends DrawObject {
         return false;
     }
 
-    add(o) {
-        this.list.push({ x: o.x, y: o.y });
+    add(o, to = -1) {
+        const obj = { x: o.x, y: o.y, type: o.type || 'line' };
+        if (to === -1) {
+            this.list.push(obj);
+        } else {
+            this.list.splice(to, 0, obj);
+        }
     }
 
     select(select = true) {
@@ -44,32 +50,70 @@ export default class DrawLine extends DrawObject {
 
     draw() {
         const d = this.owner.drawer;
-        d.lineWidth(3);
-        if (this.owner.hover && this.owner.hover === this) d.color('red');
-        else d.color('black');
+
+        let color = 'black';
+        const lineWidth = 4;
+        if (this.owner.hover && this.owner.hover === this) color = 'red';
         if (this.state === 'add' || this.state === 'modif') {
-            d.color('red');
+            color = 'red';
         }
+        d.color(color);
+        d.lineWidth(lineWidth);
 
         let last = false;
-        this.list.map((it, i) => {
+        let line_is_draw = false;
+        for (let i = 0; i < this.list.length; i++) {
+            const it = this.list[i];
+
+            // this.list.map((it, i) => {
             if (i > 0) {
-                d.line(it.x, it.y, this.list[i - 1].x, this.list[i - 1].y);
+                if (it.type === 'curve' && i < this.list.length - 1) {
+                    d.bezier(
+                        this.list[i - 1].x, this.list[i - 1].y,
+                        it.x, it.y,
+                        it.x, it.y,
+                        this.list[i + 1].x, this.list[i + 1].y,
+                        color,
+                    );
+                    line_is_draw = true;
+                } else {
+                    if (!line_is_draw) d.line(it.x, it.y, this.list[i - 1].x, this.list[i - 1].y);
+                    line_is_draw = false;
+                }
             }
+            /*
             if (this.state !== 'draw') {
+                d.lineWidth(2);
                 if (it !== this.nodeModif) {
                     d.circle(it.x, it.y, 4);
                 } else {
                     d.box(it.x - 5, it.y - 5, it.x + 5, it.y + 5);
                 }
-            }
+                d.lineWidth(lineWidth);
+            } */
             last = it;
-        });
-
+        }
         if (this.state === 'add' && last) {
             d.color('silver');
             d.line(last.x, last.y, DrawUtils.round(this.mouse.x), DrawUtils.round(this.mouse.y));
         }
+        // опорные точки
+        if (this.state !== 'draw') {
+            d.lineWidth(2);
+            d.color(color);
+            this.list.map((it, i) => {
+                d.lineWidth(2);
+                if (it !== this.nodeModif) {
+                    d.circle(it.x, it.y, 4);
+                } else {
+                    d.box(it.x - 5, it.y - 5, it.x + 5, it.y + 5);
+                }
+                d.lineWidth(lineWidth);
+            });
+
+            d.lineWidth(lineWidth);
+        }
+
         d.lineWidth(1);
     }
 
@@ -113,6 +157,7 @@ export default class DrawLine extends DrawObject {
     mouseMove(o) {
         // const o = { ...a, x: DrawUtils.round(a.x), y: DrawUtils.round(a.y) };
         // const o = { ...a };
+
         this.mouse = { ...o };
         if (this.state === 'modif') {
             if (o.pressed === 0) {
@@ -145,6 +190,9 @@ export default class DrawLine extends DrawObject {
         if (o.button === 0 && this.state === 'modif') {
             // this.nodeModif = this._hoverNode(o.x, o.y);
             this.fixMouseCoord = { ...o };
+        }
+        if (o.button === 1 && this.nodeModif) {
+            this._setNodeAsCurve(this.nodeModif);
         }
     }
 
@@ -193,5 +241,24 @@ export default class DrawLine extends DrawObject {
             return out;
         }
         return false;
+    }
+
+    _setNodeAsCurve(node) {
+        const i = this.list.indexOf(node);
+
+        if (i > 0 && i < this.list.length - 1) {
+            const nodeA = this.list[i - 1];
+            const nodeB = this.list[i + 1];
+            const d1 = DrawUtils.dlina(node.x, node.y, nodeA.x, nodeA.y);
+            const d2 = DrawUtils.dlina(node.x, node.y, nodeB.x, nodeB.y);
+            const off = 40;
+            const off1 = d1 > off ? off : d1 * 0.5;
+            const off2 = d2 > off ? off : d2 * 0.5;
+            const c1 = DrawUtils.getCoordOff(node.x, node.y, nodeA.x, nodeA.y, off1);
+            const c2 = DrawUtils.getCoordOff(node.x, node.y, nodeB.x, nodeB.y, off2);
+            this.add(c1, i);
+            this.add(c2, i + 2);
+            node.type = 'curve';
+        }
     }
 }

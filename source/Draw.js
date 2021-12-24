@@ -270,6 +270,7 @@ export default class Draw {
         this.canvas.beginPath();
         this.canvas.arc(this.worldX(o.circle.x), this.worldY(o.circle.y), o.circle.r, 0, 2 * Math.PI);
         this.canvas.stroke();
+        this.canvas.closePath();
         this._reStore('color', o.circle.color);
     }
 
@@ -315,6 +316,26 @@ export default class Draw {
             this.canvas.closePath();
         }
         this._reStore('color', a.color);
+    }
+
+    _bezier(o) {
+        const c = this.canvas;
+        const p = o.bezier;
+        this._store('color', p.color);
+
+        c.beginPath();
+        c.moveTo(this.worldX(p.x1), this.worldY(p.y1));
+        c.bezierCurveTo(
+            this.worldX(p.x2),
+            this.worldY(p.y2),
+            this.worldX(p.x3),
+            this.worldY(p.y3),
+            this.worldX(p.x4),
+            this.worldY(p.y4),
+        );
+        c.stroke();
+        c.closePath();
+        this._reStore('color', p.color);
     }
 
     clear() {
@@ -380,6 +401,8 @@ export default class Draw {
                 this._lineWidth(o);
             } else if (o.fillRect) {
                 this._fillRect(o);
+            } else if (o.bezier) {
+                this._bezier(o);
             }
         });
     }
@@ -456,6 +479,14 @@ export default class Draw {
         this.saveCommand({
             fillRect: {
                 x1, y1, x2, y2, color,
+            },
+        });
+    }
+
+    bezier(x1, y1, x2, y2, x3, y3, x4, y4, color = 'white') {
+        this.saveCommand({
+            bezier: {
+                x1, y1, x2, y2, x3, y3, x4, y4, color,
             },
         });
     }

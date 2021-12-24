@@ -1,4 +1,6 @@
 import { binds } from 'fmihel-browser-lib';
+import Draw from './Draw';
+import DrawUtils from './DrawUtils';
 
 export default class Draft {
     constructor(drawer) {
@@ -120,8 +122,26 @@ export default class Draft {
             // draw.line(-25, 0, 25, 0);
             // draw.line(0, -25, 0, 25);
 
-            // draw.arrowVH(false, 20, -40, 20, 3, true, true, 'blue');
-            // draw.arrowVH(true, 40, -40, 20, 3, true, true, 'blue');
+            /*
+            const a = { x: 0, y: 0 };
+            const b = { x: 120, y: 0 };
+            const c = { x: 70, y: 30 };
+            const d = { x: 90, y: 0 };
+            draw.line(a.x, a.y, b.x, b.y);
+            draw.line(b.x, b.y, c.x, c.y);
+            draw.line(c.x, c.y, d.x, d.y);
+            draw.circle(a.x, a.y, 3);
+            draw.circle(b.x, b.y, 3);
+            draw.circle(c.x, c.y, 3);
+            draw.circle(d.x, d.y, 3);
+
+            const off = 10;
+            const out = DrawUtils.getCoordOff(b.x, b.y, a.x, a.y, off);
+            draw.circle(out.x, out.y, 3);
+*/
+            // DrawUtils.getCoordOff(a.x,a.y,)
+
+            // draw.bezier(0, 0, 20, 20, 20, 20, 60, 0, 'red');
             this.draw();
         });
     }
