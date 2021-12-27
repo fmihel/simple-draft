@@ -1,3 +1,4 @@
+@import '../node_modules/fmihel-windeco-components/style/all.scss';
 body{
     background-color: gray;
     color:silver;
@@ -24,4 +25,23 @@ body{
     box-sizing: border-box;
     flex-grow: 1;
     overflow: hidden;
+}
+
+.lines{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: stretch;
+
+    >div{
+        order: 0;
+        flex: 1 1 auto;
+        align-self: auto;
+        &:nth-child(1){
+            flex: 0 1 auto;
+            min-width: 32px;
+        }
+    }
 }

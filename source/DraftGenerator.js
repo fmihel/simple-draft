@@ -1,9 +1,9 @@
 import DrawLine from './DrawLine';
 import DrawSize from './DrawSize';
 
-const DG_LINE = 'line';
-const DG_UGOL90 = 'ugol-90';
-const DG_R10 = 'skrug-10';
+export const DG_LINE = 'line';
+export const DG_UGOL90 = 'ugol-90';
+export const DG_R10 = 'skrug-10';
 
 export default class DraftGenerator {
     constructor(draft) {
@@ -12,7 +12,7 @@ export default class DraftGenerator {
             width: 300, // начальная ширина
             height: 80,
             start: { x: 0, y: -30 }, // начальная координата
-            step: { x: 10, y: 10 }, // шаг
+            step: { x: 20, y: 20 }, // шаг
 
         };
     }

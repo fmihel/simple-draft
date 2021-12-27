@@ -11,7 +11,6 @@
     "npm-publish-patch": "npm run build && npm version patch && npm publish && npm run git-push",
     "npm-publish-minor": "npm run build && npm version minor && npm publish && npm run git-push",
     "npm-publish-major": "npm run build && npm version major && npm publish && npm run git-push"
-
   },
   "repository": {
     "type": "git",
@@ -75,5 +74,8 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.3"
+  },
+  "dependencies": {
+    "fmihel-windeco-components": "^1.1.0"
   }
 }

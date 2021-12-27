@@ -1,15 +1,35 @@
 import React from 'react';
 import { binds } from 'fmihel-browser-lib';
+import { ModalDialog as Modal, Label, ComboBoxEx } from 'fmihel-windeco-components';
 import Draft from './Draft';
 import DrawLine from './DrawLine';
 import DrawSize from './DrawSize';
 import Draw from './Draw';
-import DraftGenerator from './DraftGenerator';
+import DraftGenerator, { DG_LINE, DG_UGOL90, DG_R10 } from './DraftGenerator';
+
+const lineDefaultLeft = {
+    select: DG_LINE,
+    list: [
+        { id: DG_LINE, caption: '---' },
+        { id: DG_UGOL90, caption: '|__' },
+        { id: DG_R10, caption: '(__' },
+    ],
+};
+const lineDefaultRight = {
+    select: DG_LINE,
+    list: [
+        { id: DG_LINE, caption: '---' },
+        { id: DG_UGOL90, caption: '__|' },
+        { id: DG_R10, caption: '__)' },
+    ],
+};
 
 export default class SimpleDraft extends React.Component {
     constructor(p) {
         super(p);
-        binds(this, 'onContextMenu', 'onChange', 'onSelect');
+        binds(this, 'onContextMenu',
+            'onChange', 'onSelect', 'onCloseDialog', 'onGen', 'onChangeCount',
+            'onChangeNodeLeft', 'onChangeNodeRight');
         this.draw = undefined;
         this.draft = undefined;
         this.refCanvas = React.createRef();
@@ -17,7 +37,77 @@ export default class SimpleDraft extends React.Component {
         this.current = undefined;
         this.state = {
             len: '',
+            showDialog: false,
+            count: {
+                list: [
+                    { id: 0, caption: '1' },
+                    { id: 1, caption: '2' },
+                    { id: 2, caption: '3' },
+                ],
+                select: 0,
+            },
+            lines: [{
+                id: 1,
+                left: lineDefaultLeft,
+                right: lineDefaultRight,
+            }],
         };
+    }
+
+    onChangeNodeLeft(o) {
+        const { lines } = this.state;
+        lines[o.id] = {
+            ...lines[o.id],
+            left: {
+                ...lines[o.id].left,
+                select: o.select,
+            },
+        };
+        this.setState({
+            lines,
+        });
+    }
+
+    onChangeNodeRight(o) {
+        const { lines } = this.state;
+        lines[o.id] = {
+            ...lines[o.id],
+            right: {
+                ...lines[o.id].right,
+                select: o.select,
+            },
+        };
+        this.setState({
+            lines,
+        });
+    }
+
+    onChangeCount(o) {
+        const lines = [];
+        for (let i = 0; i < o.select + 1; i++) {
+            lines.push(
+                { id: i + 1, left: lineDefaultLeft, right: lineDefaultRight },
+            );
+        }
+        this.setState({
+            lines,
+        });
+    }
+
+    onGen() {
+        this.showDialog(false);
+        const nodes = this.state.lines.map((line, i) => ({ left: line.left.select, right: line.right.select }));
+        // console.log(nodes);
+        this.draft.clear();
+        new DraftGenerator(this.draft).generate({ nodes });
+    }
+
+    showDialog(show = true) {
+        this.setState({ showDialog: show });
+    }
+
+    onCloseDialog() {
+        this.showDialog(false);
     }
 
     onContextMenu(o) {
@@ -61,14 +151,17 @@ export default class SimpleDraft extends React.Component {
 
     render() {
         const { id, style } = this.props;
-        const { len } = this.state;
+        const {
+            len, showDialog, count, lines,
+        } = this.state;
         return (
             <React.Fragment>
                 <div className="panel">
                     <button
                         onClick={() => {
-                            const dg = new DraftGenerator(this.draft);
-                            dg.generate();
+                            // const dg = new DraftGenerator(this.draft);
+                            // dg.generate();
+                            this.showDialog(true);
                         }}
                     >
                         gen
@@ -121,6 +214,33 @@ export default class SimpleDraft extends React.Component {
 
                     />
                 </div>
+                <Modal
+                    visible = {showDialog}
+                    onClickShadow={this.onCloseDialog}
+                    onClickHeaderClose={this.onCloseDialog}
+                    footer={{
+                        generate: this.onGen,
+                        close: this.onCloseDialog,
+                    }}
+                >
+                    <Label caption="count lines">
+                        <ComboBoxEx {...count} onChange={this.onChangeCount}/>
+                    </Label>
+                    {lines.map((line, i) => (<div key={lines[lines.length - (i + 1)].id} className="lines">
+                        <div>
+                            {lines.length - i }
+                        </div>
+                        <div>
+                            <ComboBoxEx id={lines.length - (i + 1)} {...lines[lines.length - (i + 1)].left} onChange={this.onChangeNodeLeft}/>
+                        </div>
+                        <div>
+                            <ComboBoxEx id={lines.length - (i + 1)} {...lines[lines.length - (i + 1)].right} onChange={this.onChangeNodeRight}/>
+                        </div>
+
+                    </div>))}
+
+                </Modal>
+
             </React.Fragment>
         );
     }

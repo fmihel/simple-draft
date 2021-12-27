@@ -153,4 +153,10 @@ export default class Draft {
             this.list = this.list.filter((it) => !it.eq(del));
         }
     }
+
+    clear() {
+        this.list = [];
+        this._current = undefined;
+        this.hover = undefined;
+    }
 }

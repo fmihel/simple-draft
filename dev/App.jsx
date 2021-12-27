@@ -11,10 +11,12 @@ class App extends React.Component {
         super(p);
         // binds(this, 'onTheme', 'onSize', 'onClickTable', 'onClickTableFixed', 'OpenDialog', 'CloseDialog', 'undefTheme');
         this.state = {
+            showDialog: false,
         };
     }
 
     render() {
+        const { showDialog } = this.state;
         return (
             <div className={'test'}>
                 <SimpleDraft/>
@@ -25,6 +27,7 @@ class App extends React.Component {
                     [size H] - добавить размер по горизонтали<br/>
 
                 </div>
+                <div id="wd-modal" ></div>
             </div>
         );
     }
