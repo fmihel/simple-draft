@@ -21,6 +21,14 @@ export default class DrawLine extends DrawObject {
         };
     }
 
+    items(i) {
+        return this.list[i];
+    }
+
+    count() {
+        return this.list.length;
+    }
+
     underCursor(x, y) {
         const { list } = this;
         for (let i = 1; i < list.length; i++) {

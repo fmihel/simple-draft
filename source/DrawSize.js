@@ -100,7 +100,9 @@ export default class DrawSize extends DrawObject {
         d.text(data.text, textPos.x, textPos.y, 'black', 12);
     }
 
-    move(x, y) {}
+    move(x, y) {
+
+    }
 
     select(select = true) {
         this.state = select ? 'modif' : 'draw';

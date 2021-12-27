@@ -1,7 +1,10 @@
 import DrawLine from './DrawLine';
+import DrawSize from './DrawSize';
 
 const DG_LINE = 'line';
 const DG_UGOL90 = 'ugol-90';
+const DG_R10 = 'skrug-10';
+
 export default class DraftGenerator {
     constructor(draft) {
         this.draft = draft;
@@ -18,10 +21,9 @@ export default class DraftGenerator {
     generate(o) {
         const p = {
             nodes: [
-                { left: DG_UGOL90, right: DG_UGOL90 },
-                { left: DG_LINE, right: DG_UGOL90 },
 
-                { left: DG_UGOL90, right: DG_LINE },
+                { left: DG_R10, right: DG_R10 },
+                { left: DG_R10, right: DG_LINE },
             ],
 
             ...o,
@@ -40,6 +42,52 @@ export default class DraftGenerator {
             const prev = (i > 0 ? p.nodes[i - 1] : false);
             this._genLine(i, node, prev);
         });
+
+        const w05 = this.default.width / 2;
+        this.draft.add(new DrawSize(false), false).add({
+            vert: false,
+            lines: [{
+                x1: this.default.start.x - w05,
+                y1: 0,
+                x2: this.default.start.x - w05,
+                y2: this.default.start.y - 40,
+            }, {
+                x1: this.default.start.x + w05,
+                y1: 0,
+                x2: this.default.start.x + w05,
+                y2: this.default.start.y - 40,
+            }],
+            arrow: {
+                a: this.default.start.y - 35,
+                a1: this.default.start.x - w05,
+                a2: this.default.start.x + w05,
+            },
+            text: 'xxx m',
+        });
+        const xmin = this.default.start.x - w05;
+        const ytop = this.default.start.y + this.default.height + 20;
+        const ybottom = this.default.start.y;
+        this.draft.add(new DrawSize(false), false).add({
+            vert: true,
+            lines: [{
+                x2: xmin - 40,
+                y1: ytop,
+                x1: xmin + w05,
+                y2: ytop,
+            }, {
+                x2: xmin - 40,
+                y1: ybottom,
+                x1: xmin + w05,
+                y2: ybottom,
+            }],
+            arrow: {
+                a: xmin - 35,
+                a2: ytop,
+                a1: ybottom,
+            },
+            text: 'xxx m',
+        });
+
         this._global = undefined;
     }
 
@@ -62,12 +110,22 @@ export default class DraftGenerator {
             points.push({ x: g.xmin, y: g.ymin });
             dx.left = g.step.x;
         }
+        if (node.left === DG_R10) {
+            points.push({ x: g.xmin, y: g.ymax });
+            points.push({ x: g.xmin, y: g.ymin });
+            dx.left = g.step.x;
+        }
 
         //-----------------------------------------------------------------
         if (node.right === DG_LINE) {
             points.push({ x: g.xmax, y: g.ymin });
         }
         if (node.right === DG_UGOL90) {
+            points.push({ x: g.xmax, y: g.ymin });
+            points.push({ x: g.xmax, y: g.ymax });
+            dx.right = g.step.x;
+        }
+        if (node.right === DG_R10) {
             points.push({ x: g.xmax, y: g.ymin });
             points.push({ x: g.xmax, y: g.ymax });
             dx.right = g.step.x;
@@ -79,5 +137,13 @@ export default class DraftGenerator {
         //-----------------------------------------------------------------
         const line = d.add(new DrawLine(), false);
         points.map((point) => line.add(point));
+
+        if (node.left === DG_R10) {
+            line._setNodeAsCurve(line.items(1));
+        }
+        if (node.right === DG_R10) {
+            line._setNodeAsCurve(line.items(line.count() - 2));
+        }
+        //-----------------------------------------------------------------
     }
 }
