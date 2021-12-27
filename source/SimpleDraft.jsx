@@ -4,6 +4,7 @@ import Draft from './Draft';
 import DrawLine from './DrawLine';
 import DrawSize from './DrawSize';
 import Draw from './Draw';
+import DraftGenerator from './DraftGenerator';
 
 export default class SimpleDraft extends React.Component {
     constructor(p) {
@@ -64,6 +65,14 @@ export default class SimpleDraft extends React.Component {
         return (
             <React.Fragment>
                 <div className="panel">
+                    <button
+                        onClick={() => {
+                            const dg = new DraftGenerator(this.draft);
+                            dg.generate();
+                        }}
+                    >
+                        gen
+                    </button>
                     <button
                         onClick={() => {
                             this.draft.current('free');
