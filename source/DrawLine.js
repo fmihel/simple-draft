@@ -81,16 +81,6 @@ export default class DrawLine extends DrawObject {
                     line_is_draw = false;
                 }
             }
-            /*
-            if (this.state !== 'draw') {
-                d.lineWidth(2);
-                if (it !== this.nodeModif) {
-                    d.circle(it.x, it.y, 4);
-                } else {
-                    d.box(it.x - 5, it.y - 5, it.x + 5, it.y + 5);
-                }
-                d.lineWidth(lineWidth);
-            } */
             last = it;
         }
         if (this.state === 'add' && last) {
@@ -101,12 +91,14 @@ export default class DrawLine extends DrawObject {
         if (this.state !== 'draw') {
             d.lineWidth(2);
             d.color(color);
-            this.list.map((it, i) => {
+            this.list.map((it) => {
                 d.lineWidth(2);
-                if (it !== this.nodeModif) {
-                    d.circle(it.x, it.y, 4);
-                } else {
+                if (it === this.nodeModif) {
                     d.box(it.x - 5, it.y - 5, it.x + 5, it.y + 5);
+                } else if (it === this.nodeHover) {
+                    d.circle(it.x, it.y, 5);
+                } else {
+                    d.circle(it.x, it.y, 4);
                 }
                 d.lineWidth(lineWidth);
             });
@@ -133,9 +125,7 @@ export default class DrawLine extends DrawObject {
     move(x, y) {}
 
     // вариант модификации без прилипания к сетке
-    mouseMove_v1(o) {
-        // const o = { ...a, x: DrawUtils.round(a.x), y: DrawUtils.round(a.y) };
-        // const o = { ...a };
+    mouseMove(o) {
         this.mouse = { ...o };
         if (this.state === 'modif') {
             if (o.pressed === 0) {
@@ -148,13 +138,12 @@ export default class DrawLine extends DrawObject {
                     this.list = this.list.map((it) => ({ ...it, x: it.x - dx, y: it.y - dy }));
                 }
                 this.fixMouseCoord = { ...o };
-            } else {
-                this.nodeModif = this._hoverNode(o.x, o.y);
             }
+            this.nodeHover = this._hoverNode(o.x, o.y);
         }
     }
 
-    mouseMove(o) {
+    mouseMove_v1(o) {
         // const o = { ...a, x: DrawUtils.round(a.x), y: DrawUtils.round(a.y) };
         // const o = { ...a };
 
@@ -188,7 +177,7 @@ export default class DrawLine extends DrawObject {
         }
 
         if (o.button === 0 && this.state === 'modif') {
-            // this.nodeModif = this._hoverNode(o.x, o.y);
+            this.nodeModif = this.nodeHover;// this._hoverNode(o.x, o.y);
             this.fixMouseCoord = { ...o };
         }
         if (o.button === 1 && this.nodeModif) {
@@ -252,8 +241,8 @@ export default class DrawLine extends DrawObject {
             const d1 = DrawUtils.dlina(node.x, node.y, nodeA.x, nodeA.y);
             const d2 = DrawUtils.dlina(node.x, node.y, nodeB.x, nodeB.y);
             const off = 40;
-            const off1 = d1 > off ? off : d1 * 0.5;
-            const off2 = d2 > off ? off : d2 * 0.5;
+            const off1 = d1 * 0.5 > off ? off : d1 * 0.5;
+            const off2 = d2 * 0.5 > off ? off : d2 * 0.5;
             const c1 = DrawUtils.getCoordOff(node.x, node.y, nodeA.x, nodeA.y, off1);
             const c2 = DrawUtils.getCoordOff(node.x, node.y, nodeB.x, nodeB.y, off2);
             this.add(c1, i);
