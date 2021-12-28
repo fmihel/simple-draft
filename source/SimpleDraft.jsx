@@ -223,12 +223,12 @@ export default class SimpleDraft extends React.Component {
                         close: this.onCloseDialog,
                     }}
                 >
-                    <Label caption="count lines">
+                    <Label caption="Кол-во рядов">
                         <ComboBoxEx {...count} onChange={this.onChangeCount}/>
                     </Label>
                     {lines.map((line, i) => (<div key={lines[lines.length - (i + 1)].id} className="lines">
                         <div>
-                            {lines.length - i }
+                            {`ряд ${lines.length - i}` }
                         </div>
                         <div>
                             <ComboBoxEx id={lines.length - (i + 1)} {...lines[lines.length - (i + 1)].left} onChange={this.onChangeNodeLeft}/>

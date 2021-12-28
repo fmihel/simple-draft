@@ -18,7 +18,7 @@ class App extends React.Component {
     render() {
         const { showDialog } = this.state;
         return (
-            <div className={'test'}>
+            <div className={'test light normal'}>
                 <SimpleDraft/>
                 <div style={{ marginTop: 10, color: 'black' }}>
                     [view] - просмотр результатат ( сброс курсора)<br/>
