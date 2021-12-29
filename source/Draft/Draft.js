@@ -1,6 +1,4 @@
 import { binds } from 'fmihel-browser-lib';
-import Draw from './Draw';
-import DrawUtils from './DrawUtils';
 
 export default class Draft {
     constructor(drawer) {

@@ -1,7 +1,7 @@
-import DrawObject from './DrawObject';
-import DrawUtils from './DrawUtils';
+import DraftObject from './DraftObject';
+import { DrawUtils } from '../Draw';
 
-export default class DrawSize extends DrawObject {
+export default class DraftSize extends DraftObject {
     constructor(vert = true) {
         super();
         // this.owner = undefined;

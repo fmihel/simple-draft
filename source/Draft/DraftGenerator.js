@@ -1,5 +1,5 @@
-import DrawLine from './DrawLine';
-import DrawSize from './DrawSize';
+import DraftLine from './DraftLine';
+import DraftSize from './DraftSize';
 
 export const DG_LINE = 'line';
 export const DG_UGOL90 = 'ugol-90';
@@ -44,7 +44,7 @@ export default class DraftGenerator {
         });
 
         const w05 = this.default.width / 2;
-        this.draft.add(new DrawSize(false), false).add({
+        this.draft.add(new DraftSize(false), false).add({
             vert: false,
             lines: [{
                 x1: this.default.start.x - w05,
@@ -67,7 +67,7 @@ export default class DraftGenerator {
         const xmin = this.default.start.x - w05;
         const ytop = this.default.start.y + this.default.height + 20;
         const ybottom = this.default.start.y;
-        this.draft.add(new DrawSize(false), false).add({
+        this.draft.add(new DraftSize(false), false).add({
             vert: true,
             lines: [{
                 x2: xmin - 40,
@@ -135,7 +135,7 @@ export default class DraftGenerator {
         g.xmax -= dx.right;
         g.ymin += dy;
         //-----------------------------------------------------------------
-        const line = d.add(new DrawLine(), false);
+        const line = d.add(new DraftLine(), false);
         points.map((point) => line.add(point));
 
         if (node.left === DG_R10) {

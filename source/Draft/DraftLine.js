@@ -1,9 +1,8 @@
 /* eslint-disable camelcase */
-import { compact } from 'lodash';
-import DrawObject from './DrawObject';
-import DrawUtils from './DrawUtils';
+import DraftObject from './DraftObject';
+import { DrawUtils } from '../Draw';
 
-export default class DrawLine extends DrawObject {
+export default class DraftLine extends DraftObject {
     constructor() {
         super();
         this.list = [];

@@ -1,13 +1,9 @@
 import React from 'react';
 import { binds } from 'fmihel-browser-lib';
-import { ModalDialog as Modal, Label, ComboBoxEx } from 'fmihel-windeco-components';
-import Draft from './Draft';
-import DrawLine from './DrawLine';
-import DrawSize from './DrawSize';
-import Draw from './Draw';
-// import DraftGenerator, { DG_LINE, DG_UGOL90, DG_R10 } from './DraftGenerator';
+import {Draft,DraftGenerator,DraftLine,DraftSize} from './Draft';
+import {Draw} from './Draw';
 import GeneratorForm from './GeneratorForm/GeneratorForm.jsx';
-import DraftGenerator from './DraftGenerator';
+
 
 export default class SimpleDraft extends React.Component {
     constructor(p) {
@@ -46,14 +42,14 @@ export default class SimpleDraft extends React.Component {
     onChange(o) {
         // if (this.current.data && this.current.data.text = o.ta)
         this.setState({ len: o.target.value });
-        if (this.current && (this.current instanceof DrawSize)) {
+        if (this.current && (this.current instanceof DraftSize)) {
             this.current.data.text = o.target.value;
         }
     }
 
     onSelect(o) {
         this.current = o.current;
-        if (this.current && (this.current instanceof DrawSize)) {
+        if (this.current && (this.current instanceof DraftSize)) {
             this.setState({ len: this.current.data.text });
         } else this.setState({ len: '' });
     }
@@ -65,7 +61,7 @@ export default class SimpleDraft extends React.Component {
 
         this.draft.onSelect = this.onSelect;
         this.draft.render();
-        this.draft.add(new DrawLine(), true);
+        this.draft.add(new DraftLine(), true);
     }
 
     componentWillUnmount() {
@@ -79,7 +75,7 @@ export default class SimpleDraft extends React.Component {
     render() {
         const { id, style } = this.props;
         const {
-            len, showDialog, count, lines,
+            len, showDialog, 
         } = this.state;
         return (
             <React.Fragment>
@@ -100,17 +96,17 @@ export default class SimpleDraft extends React.Component {
                     >view</button>
                     <button
                         onClick={() => {
-                            this.draft.add(new DrawLine(), true);
+                            this.draft.add(new DraftLine(), true);
                         }}
                     >line</button>
                     <button
                         onClick={() => {
-                            this.draft.add(new DrawSize(true), true);
+                            this.draft.add(new DraftSize(true), true);
                         }}
                     >size V</button>
                     <button
                         onClick={() => {
-                            this.draft.add(new DrawSize(false), true);
+                            this.draft.add(new DraftSize(false), true);
                         }}
                     >size H</button>
                     {this.current
@@ -120,7 +116,7 @@ export default class SimpleDraft extends React.Component {
                         }}
                     >delete</button>
                     }
-                    {(this.current && this.current instanceof DrawSize) && <input type="text" onChange={this.onChange} value={len}/>}
+                    {(this.current && this.current instanceof DraftSize) && <input type="text" onChange={this.onChange} value={len}/>}
                 </div>
                 <div
                     className="canvas-frame"

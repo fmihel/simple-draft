@@ -1,4 +1,4 @@
-export default class DrawObject {
+export default class DraftObject {
     constructor() {
         this.owner = undefined;
         this.state = 'draw';

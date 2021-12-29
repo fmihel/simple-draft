@@ -1,8 +1,8 @@
 import { binds } from 'fmihel-browser-lib';
 import React from 'react';
-import { DG_LINE, DG_UGOL90, DG_R10 } from '../DraftGenerator';
-import './GeneratorForm.scss';
 import { ModalDialog, Label, ComboBoxEx } from 'fmihel-windeco-components';
+import { DG_LINE, DG_UGOL90, DG_R10 } from '../Draft/DraftGenerator';
+import './GeneratorForm.scss';
 
 const lineDefaultLeft = {
     select: DG_LINE,
