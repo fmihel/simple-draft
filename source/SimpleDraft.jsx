@@ -1,15 +1,17 @@
 import React from 'react';
 import { binds } from 'fmihel-browser-lib';
-import {Draft,DraftGenerator,DraftLine,DraftSize} from './Draft';
-import {Draw} from './Draw';
+import {
+    Draft, DraftGenerator, DraftLine, DraftSize,
+} from './Draft';
+import { Draw } from './Draw';
 import GeneratorForm from './GeneratorForm/GeneratorForm.jsx';
-
+import DraftPanel from './DraftPanel/DraftPanel.jsx';
 
 export default class SimpleDraft extends React.Component {
     constructor(p) {
         super(p);
         binds(this, 'onContextMenu',
-            'onChange', 'onSelect', 'onCloseDialog', 'onGenerate');
+            'onDraftChange', 'onCloseDialog', 'onGenerate', 'onInitDraftPanel');
         this.draw = undefined;
         this.draft = undefined;
         this.refCanvas = React.createRef();
@@ -19,6 +21,10 @@ export default class SimpleDraft extends React.Component {
             len: '',
             showDialog: false,
         };
+    }
+
+    onInitDraftPanel(o) {
+        this.DraftPanel = o.sender;
     }
 
     onGenerate(o) {
@@ -39,29 +45,18 @@ export default class SimpleDraft extends React.Component {
         return false;
     }
 
-    onChange(o) {
-        // if (this.current.data && this.current.data.text = o.ta)
-        this.setState({ len: o.target.value });
-        if (this.current && (this.current instanceof DraftSize)) {
-            this.current.data.text = o.target.value;
-        }
-    }
+    onDraftChange(o) {
 
-    onSelect(o) {
-        this.current = o.current;
-        if (this.current && (this.current instanceof DraftSize)) {
-            this.setState({ len: this.current.data.text });
-        } else this.setState({ len: '' });
     }
 
     componentDidMount() {
         // разовый вызов после первого рендеринга
         this.draw = new Draw(this.refCanvas.current);
-        this.draft = new Draft(this.draw);
-
-        this.draft.onSelect = this.onSelect;
-        this.draft.render();
-        this.draft.add(new DraftLine(), true);
+        const draft = new Draft(this.draw);
+        this.draft = draft;
+        draft.addEventChange(this.onDraftChange);
+        draft.render();
+        this.DraftPanel.set({ draft });
     }
 
     componentWillUnmount() {
@@ -75,49 +70,17 @@ export default class SimpleDraft extends React.Component {
     render() {
         const { id, style } = this.props;
         const {
-            len, showDialog, 
+            showDialog,
         } = this.state;
         return (
             <React.Fragment>
-                <div className="panel">
-                    <button
-                        onClick={() => {
-                            // const dg = new DraftGenerator(this.draft);
-                            // dg.generate();
-                            this.showDialog(true);
-                        }}
-                    >
-                        gen
-                    </button>
-                    <button
-                        onClick={() => {
-                            this.draft.current('free');
-                        }}
-                    >view</button>
-                    <button
-                        onClick={() => {
-                            this.draft.add(new DraftLine(), true);
-                        }}
-                    >line</button>
-                    <button
-                        onClick={() => {
-                            this.draft.add(new DraftSize(true), true);
-                        }}
-                    >size V</button>
-                    <button
-                        onClick={() => {
-                            this.draft.add(new DraftSize(false), true);
-                        }}
-                    >size H</button>
-                    {this.current
-                    && <button
-                        onClick={() => {
-                            this.draft.delete();
-                        }}
-                    >delete</button>
-                    }
-                    {(this.current && this.current instanceof DraftSize) && <input type="text" onChange={this.onChange} value={len}/>}
-                </div>
+                <DraftPanel
+                    onInit={this.onInitDraftPanel}
+                    onShowGenerator={() => {
+                        this.showDialog(true);
+                    }}
+                />
+
                 <div
                     className="canvas-frame"
                     id={id}

@@ -11,7 +11,7 @@ export default class Draft {
         this.drawer.onMove = this.mouseMove;
         this.drawer.onMouseDown = this.mouseDown;
         this.drawer.onMouseUp = this.mouseUp;
-        this.onSelect = undefined;
+        this.changes = [];
     }
 
     add(o, asCurrent = false) {
@@ -21,6 +21,7 @@ export default class Draft {
         if (asCurrent) {
             this.current(o);
         }
+        this._doChange();
         return o;
     }
 
@@ -57,16 +58,12 @@ export default class Draft {
         if (setNew === 'free') {
             if (this._current) this._current.select(false);
             this._current = undefined;
-            if (this.onSelect) {
-                this.onSelect({ sender: this, current: undefined });
-            }
+            this._doChange({ event: 'select', current: undefined });
         } else if (setNew) {
             if (this._current) this._current.select(false);
             this._current = setNew;
             this._current.select();
-            if (this.onSelect) {
-                this.onSelect({ sender: this, current: this._current });
-            }
+            this._doChange({ event: 'select', current: this._current });
         }
         return this._current;
     }
@@ -149,6 +146,7 @@ export default class Draft {
             const del = this._current;
             this.current('free');
             this.list = this.list.filter((it) => !it.eq(del));
+            this._doChange();
         }
     }
 
@@ -156,5 +154,19 @@ export default class Draft {
         this.list = [];
         this._current = undefined;
         this.hover = undefined;
+        this._doChange();
+    }
+
+    /** возврашает ф-цию удаляющую событие */
+    addEventChange(func) {
+        this.changes.push(func);
+        return () => {
+            const index = this.changes.indexOf(func);
+            if (index >= 0) this.changes.splice(index, 1);
+        };
+    }
+
+    _doChange(o) {
+        this.changes.map((f) => f({ event: 'change', sender: this, ...o }));
     }
 }

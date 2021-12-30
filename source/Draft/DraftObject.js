@@ -28,4 +28,8 @@ export default class DraftObject {
     getGabarit() {
 
     }
+
+    doChange(o) {
+        this.owner._doChange({ event: 'object', sender: this, ...o });
+    }
 }

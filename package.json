@@ -76,6 +76,6 @@
     "webpack-dev-server": "^3.11.3"
   },
   "dependencies": {
-    "fmihel-windeco-components": "^1.3.0"
+    "fmihel-windeco-components": "^1.4.0"
   }
 }

@@ -186,6 +186,9 @@ export default class DraftLine extends DraftObject {
         if (o.button === 0 && this.state === 'modif') {
             this.nodeModif = this.nodeHover;// this._hoverNode(o.x, o.y);
             this.fixMouseCoord = { ...o };
+            if (this.nodeModif) {
+                this.doChange({ event: 'select-node', node: this.nodeModif });
+            }
         }
         if (o.button === 1 && this.nodeModif) {
             this._setNodeAsCurve(this.nodeModif);

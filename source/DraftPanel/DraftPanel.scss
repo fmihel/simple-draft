@@ -1,0 +1,21 @@
+$size:32px;
+$gap:2px;
+.draft-panel{
+    min-height:$size;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: stretch;
+    >div,>input{
+        margin-right:$gap;
+    }
+    .df-btn{
+
+    }    
+    .df-btn-view{
+
+    }    
+}
