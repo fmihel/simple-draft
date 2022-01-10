@@ -28,6 +28,24 @@ export default class DraftLine extends DraftObject {
         return this.list.length;
     }
 
+    indexOf(node) {
+        return this.list.indexOf(node);
+    }
+
+    delete(node) {
+        const index = typeof node === 'object' ? this.indexOf(node) : node;
+        if (index >= 0) this.list.splice(index, 1);
+    }
+
+    /** точка расположена не на концах */
+    isNotBorderNode(node) {
+        if (node) {
+            const index = this.indexOf(node);
+            return (index > 0 && index < this.count() - 1);
+        }
+        return false;
+    }
+
     underCursor(x, y) {
         const { list } = this;
         for (let i = 1; i < list.length; i++) {
@@ -184,14 +202,13 @@ export default class DraftLine extends DraftObject {
         }
 
         if (o.button === 0 && this.state === 'modif') {
+            const needChange = (this.nodeModif !== this.nodeHover);
+
             this.nodeModif = this.nodeHover;// this._hoverNode(o.x, o.y);
             this.fixMouseCoord = { ...o };
-            if (this.nodeModif) {
+            if (needChange) {
                 this.doChange({ event: 'select-node', node: this.nodeModif });
             }
-        }
-        if (o.button === 1 && this.nodeModif) {
-            this._setNodeAsCurve(this.nodeModif);
         }
     }
 
@@ -242,7 +259,7 @@ export default class DraftLine extends DraftObject {
         return false;
     }
 
-    _setNodeAsCurve(node) {
+    setNodeAsCurve(node) {
         const i = this.list.indexOf(node);
 
         if (i > 0 && i < this.list.length - 1) {
@@ -259,5 +276,16 @@ export default class DraftLine extends DraftObject {
             this.add(c2, i + 2);
             node.type = 'curve';
         }
+    }
+
+    setNodeAsLine(node) {
+        if (this.isNotBorderNode(node)) {
+            const i = this.indexOf(node);
+            node.type = 'line';
+        }
+    }
+
+    currentNode() {
+        return this.nodeModif;
     }
 }

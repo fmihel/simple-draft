@@ -1,5 +1,5 @@
 import {
-    ut, JX, parentDOM, binds,
+    ut, parentDOM, binds,
 } from 'fmihel-browser-lib';
 
 export default class Draw {

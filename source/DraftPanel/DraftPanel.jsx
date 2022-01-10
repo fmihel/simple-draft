@@ -14,7 +14,10 @@ export default class DraftPanel extends React.Component {
             'newLine',
             'addSizeV',
             'addSizeH',
-            'onChangeSizeValue');
+            'onChangeSizeValue',
+            'setNodeCurve',
+            'setNodeLine',
+            'deleteNode');
         this.state = {
             visibleView: false,
             visibleCreate: true,
@@ -23,23 +26,38 @@ export default class DraftPanel extends React.Component {
             visibleSizeH: false,
             visibleDelete: false,
             visibleSizeValue: false,
-
+            visibleNodeCurve: false,
+            visibleNodeLine: false,
+            visibleDeleteNode: false,
             sizeValue: '',
         };
+    }
+
+    current() {
+        return this.draft.current();
+    }
+
+    currentNode() {
+        const current = this.current();
+        return (current instanceof DraftLine ? current.currentNode() : false);
     }
 
     _onChangeDraft(o) {
         console.log('draft change', o);
         const haveLine = this.draft.list.findIndex((it) => it instanceof DraftLine) > -1;
-        const current = this.draft.current();
+        const current = this.current();
+        const currentNode = this.currentNode();
 
         this.setState((prev) => ({
             ...prev,
             visibleLine: haveLine,
             visibleSizeV: haveLine,
             visibleSizeH: haveLine,
-            visibleDelete: current,
+            visibleDelete: current && !currentNode,
+            visibleDeleteNode: currentNode,
             visibleSizeValue: (current instanceof DraftSize),
+            visibleNodeCurve: currentNode && current.isNotBorderNode(currentNode) && currentNode.type === 'line',
+            visibleNodeLine: currentNode && current.isNotBorderNode(currentNode) && currentNode.type === 'curve',
 
         }));
 
@@ -58,6 +76,13 @@ export default class DraftPanel extends React.Component {
         this.draft.delete();
     }
 
+    deleteNode() {
+        const currentNode = this.currentNode();
+        if (currentNode) {
+            this.current().delete(currentNode);
+        }
+    }
+
     newLine() {
         this.draft.add(new DraftLine(), true);
     }
@@ -72,9 +97,25 @@ export default class DraftPanel extends React.Component {
 
     onChangeSizeValue(o) {
         this.setState({ sizeValue: o.value });
-        const current = this.draft.current();
+        const current = this.current();
         if (current && (current instanceof DraftSize)) {
             current.data.text = o.value;
+        }
+    }
+
+    setNodeCurve() {
+        const current = this.current();
+        const currentNode = this.currentNode();
+        if (currentNode) {
+            current.setNodeAsCurve(currentNode);
+        }
+    }
+
+    setNodeLine() {
+        const current = this.current();
+        const currentNode = this.currentNode();
+        if (currentNode) {
+            current.setNodeAsLine(currentNode);
         }
     }
 
@@ -106,7 +147,10 @@ export default class DraftPanel extends React.Component {
             visibleSizeH,
             visibleSizeV,
             visibleDelete,
+            visibleDeleteNode,
             visibleSizeValue,
+            visibleNodeCurve,
+            visibleNodeLine,
             sizeValue,
         } = this.state;
 
@@ -117,8 +161,11 @@ export default class DraftPanel extends React.Component {
                 {visibleLine && <Btn addClass="df-btn df-btn-line"hint='чертить ломаную' onClick={this.newLine}>&#9998;</Btn>}
                 {visibleSizeV && <Btn addClass="df-btn df-btn-size-v"hint='вертикальный размер ' onClick={this.addSizeV}>&#8597;</Btn>}
                 {visibleSizeH && <Btn addClass="df-btn df-btn-size-h"hint='горизонтальный размер' onClick={this.addSizeH}>&#8596;</Btn>}
-                {visibleDelete && <Btn addClass="df-btn df-btn-delete"hint='удалить' onClick={this.delete}>&#10006;</Btn>}
                 {visibleSizeValue && <Edit addClass="df-edit" placeholder='значение' onChange={this.onChangeSizeValue} value={sizeValue}/>}
+                {visibleNodeCurve && <Btn addClass="df-btn df-btn-node-curve"hint='скруглить' onClick={this.setNodeCurve}>&#8978;</Btn>}
+                {visibleNodeLine && <Btn addClass="df-btn df-btn-node-line"hint='выпрямить' onClick={this.setNodeLine}>&#8212;</Btn>}
+                {visibleDelete && <Btn addClass="df-btn df-btn-delete"hint='удалить' onClick={this.delete}>&#10006;</Btn>}
+                {visibleDeleteNode && <Btn addClass="df-btn df-btn-delete-node"hint='удалить точку' onClick={this.deleteNode}>&#10062;</Btn>}
             </div>
         );
     }

@@ -139,10 +139,10 @@ export default class DraftGenerator {
         points.map((point) => line.add(point));
 
         if (node.left === DG_R10) {
-            line._setNodeAsCurve(line.items(1));
+            line.setNodeAsCurve(line.items(1));
         }
         if (node.right === DG_R10) {
-            line._setNodeAsCurve(line.items(line.count() - 2));
+            line.setNodeAsCurve(line.items(line.count() - 2));
         }
         //-----------------------------------------------------------------
     }
