@@ -105,14 +105,16 @@ export default class GeneratorForm extends React.Component {
     }
 
     render() {
-        const { visible, onClose } = this.props;
+        const {
+            visible, onClose,
+        } = this.props;
         const { lines, count } = this.state;
         return (
             <ModalDialog
                 visible = {visible}
                 align = 'custom'
                 draggable = {true}
-                left = {300}
+                left = {100}
                 top = {100}
                 width = {300}
                 height = {260}
@@ -147,4 +149,5 @@ GeneratorForm.defaultProps = {
     visible: true,
     onClose: undefined,
     onChange: undefined,
+
 };

@@ -6,14 +6,14 @@ export const DG_UGOL90 = 'ugol-90';
 export const DG_R10 = 'skrug-10';
 
 export default class DraftGenerator {
-    constructor(draft) {
+    constructor(draft, param = {}) {
         this.draft = draft;
         this.default = {
             width: 300, // начальная ширина
             height: 80,
-            start: { x: 0, y: -30 }, // начальная координата
-            step: { x: 20, y: 20 }, // шаг
-
+            ...param,
+            start: { x: 0, y: -30, ...param.start }, // начальная координата
+            step: { x: 20, y: 20, ...param.step }, // шаг
         };
     }
 
@@ -21,11 +21,9 @@ export default class DraftGenerator {
     generate(o) {
         const p = {
             nodes: [
-
                 { left: DG_R10, right: DG_R10 },
                 { left: DG_R10, right: DG_LINE },
             ],
-
             ...o,
         };
 
@@ -65,23 +63,25 @@ export default class DraftGenerator {
             text: 'xxx m',
         });
         const xmin = this.default.start.x - w05;
-        const ytop = this.default.start.y + this.default.height + 20;
+        const ytop = this.default.start.y + this.default.height + 10;
         const ybottom = this.default.start.y;
         this.draft.add(new DraftSize(false), false).add({
             vert: true,
-            lines: [{
-                x2: xmin - 40,
-                y1: ytop,
-                x1: xmin + w05,
-                y2: ytop,
-            }, {
-                x2: xmin - 40,
-                y1: ybottom,
-                x1: xmin + w05,
-                y2: ybottom,
-            }],
+            lines: [
+                {
+                    x2: xmin - 30,
+                    y1: ybottom,
+                    x1: xmin + w05,
+                    y2: ybottom,
+                },
+                {
+                    x2: xmin - 30,
+                    y1: ytop,
+                    x1: xmin + w05,
+                    y2: ytop,
+                }],
             arrow: {
-                a: xmin - 35,
+                a: xmin - 25,
                 a2: ytop,
                 a1: ybottom,
             },

@@ -1,6 +1,8 @@
-$size:32px;
-$gap:2px;
+$size:24px;
+$gap:1px;
 .draft-panel{
+    position: absolute;
+   // border:1px dashed red;
     min-height:$size;
 
     display: flex;
@@ -11,11 +13,20 @@ $gap:2px;
     align-items: stretch;
     >div,>input{
         margin-right:$gap;
+        height: $size !important;
+        min-height: $size !important;
     }
     .df-btn{
+        min-width: $size !important;
+        max-width: $size !important;
+        width: $size !important;
+        height: $size;
+        border-radius: 0px;
+        background-color: rgb(177, 177, 177);
+        //color: white;
 
     }    
-    .df-btn-view{
-
-    }    
+    .df-btn-delete,.df-btn-delete-node{
+        color:red;
+    }
 }

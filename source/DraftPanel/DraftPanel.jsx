@@ -50,9 +50,9 @@ export default class DraftPanel extends React.Component {
 
         this.setState((prev) => ({
             ...prev,
-            visibleLine: haveLine,
-            visibleSizeV: haveLine,
-            visibleSizeH: haveLine,
+            visibleLine: haveLine && !current,
+            visibleSizeV: haveLine && !current,
+            visibleSizeH: haveLine && !current,
             visibleDelete: current && !currentNode,
             visibleDeleteNode: currentNode,
             visibleSizeValue: (current instanceof DraftSize),
@@ -161,7 +161,8 @@ export default class DraftPanel extends React.Component {
                 {visibleLine && <Btn addClass="df-btn df-btn-line"hint='чертить ломаную' onClick={this.newLine}>&#9998;</Btn>}
                 {visibleSizeV && <Btn addClass="df-btn df-btn-size-v"hint='вертикальный размер ' onClick={this.addSizeV}>&#8597;</Btn>}
                 {visibleSizeH && <Btn addClass="df-btn df-btn-size-h"hint='горизонтальный размер' onClick={this.addSizeH}>&#8596;</Btn>}
-                {visibleSizeValue && <Edit addClass="df-edit" placeholder='значение' onChange={this.onChangeSizeValue} value={sizeValue}/>}
+                {visibleSizeValue && <Edit addClass="df-edit" placeholder='значение' disable= {{ dim: true }}
+                    onChange={this.onChangeSizeValue} value={sizeValue}/>}
                 {visibleNodeCurve && <Btn addClass="df-btn df-btn-node-curve"hint='скруглить' onClick={this.setNodeCurve}>&#8978;</Btn>}
                 {visibleNodeLine && <Btn addClass="df-btn df-btn-node-line"hint='выпрямить' onClick={this.setNodeLine}>&#8212;</Btn>}
                 {visibleDelete && <Btn addClass="df-btn df-btn-delete"hint='удалить' onClick={this.delete}>&#10006;</Btn>}

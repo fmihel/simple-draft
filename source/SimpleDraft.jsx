@@ -1,7 +1,7 @@
 import React from 'react';
 import { binds } from 'fmihel-browser-lib';
 import {
-    Draft, DraftGenerator, DraftLine, DraftSize,
+    Draft, DraftGenerator,
 } from './Draft';
 import { Draw } from './Draw';
 import GeneratorForm from './GeneratorForm/GeneratorForm.jsx';
@@ -29,7 +29,8 @@ export default class SimpleDraft extends React.Component {
 
     onGenerate(o) {
         this.draft.clear();
-        new DraftGenerator(this.draft).generate({ nodes: o.nodes });
+        const props = { width: this.props.style.width * 0.7, height: this.props.style.height * 0.4 };
+        new DraftGenerator(this.draft, props).generate({ nodes: o.nodes });
     }
 
     showDialog(show = true) {
@@ -74,26 +75,26 @@ export default class SimpleDraft extends React.Component {
         } = this.state;
         return (
             <React.Fragment>
-                <DraftPanel
-                    onInit={this.onInitDraftPanel}
-                    onShowGenerator={() => {
-                        this.showDialog(true);
-                    }}
-                />
 
                 <div
                     className="canvas-frame"
                     id={id}
                     style={{
+                        position: 'absolute',
+                        left: 20,
+                        top: 20,
                         padding: 0,
                         margin: 0,
-                        width: 500,
-                        height: 200,
                         ...style,
                         border: '1px dashed red',
                     }}
                 >
-                    <canvas
+                    <DraftPanel
+                        onInit={this.onInitDraftPanel}
+                        onShowGenerator={() => {
+                            this.showDialog(true);
+                        }}
+                    />     <canvas
                         id={id}
                         ref = {this.refCanvas}
                         onContextMenu={this.onContextMenu}
@@ -104,6 +105,7 @@ export default class SimpleDraft extends React.Component {
                     visible = {showDialog}
                     onChange={this.onGenerate}
                     onClose={this.onCloseDialog}
+
                 />
             </React.Fragment>
         );
@@ -111,5 +113,9 @@ export default class SimpleDraft extends React.Component {
 }
 SimpleDraft.defaultProps = {
     id: 'canvas',
-    style: {},
+    style: {
+        width: 300,
+        height: 300,
+    },
+    onChange: undefined,
 };
