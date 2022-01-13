@@ -5,17 +5,28 @@
     justify-content: flex-start;
     align-content: stretch;
     align-items: stretch;
-    margin:5px;
+
+    margin-left:5px;
+    margin-right:0px;
+    margin-top:5px;
+    margin-bottom:5px;
+
     >div{
         order: 0;
         flex: 1 1 auto;
         align-self: auto;
-        margin:5px;
+        
+        margin-left:2px;
+        margin-right:0px;
+        margin-top:1px;
+        margin-bottom:0px;
+
         &:nth-child(1){
             flex: 0 1 auto;
             min-width: 32px;
             line-height: 32px;
             height:32px;
+            margin-left:0px;
         }
     }
 }

@@ -27,7 +27,7 @@ class App extends React.Component {
                     [size H] - добавить размер по горизонтали<br/>
 
                 </div>
-                <div id="wd-modal" ></div>
+                <div id="wd-modal" />
             </div>
         );
     }

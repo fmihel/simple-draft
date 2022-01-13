@@ -102,7 +102,7 @@ export default class SimpleDraft extends React.Component {
                     />
                 </div>
                 <GeneratorForm
-                    visible = {showDialog}
+                    visible={showDialog}
                     onChange={this.onGenerate}
                     onClose={this.onCloseDialog}
 

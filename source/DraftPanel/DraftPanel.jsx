@@ -157,7 +157,7 @@ export default class DraftPanel extends React.Component {
         return (
             <div className="draft-panel">
                 {visibleView && <Btn addClass="df-btn df-btn-view" hint="просмотр">&#8629;</Btn>}
-                {visibleCreate && <Btn addClass="df-btn df-btn-create" hint='создать' onClick={this.showGenerator}>&#8801;</Btn>}
+                {visibleCreate && <Btn id='df-btn-create' addClass="df-btn df-btn-create" hint='создать' onClick={this.showGenerator}>&#8801;</Btn>}
                 {visibleLine && <Btn addClass="df-btn df-btn-line"hint='чертить ломаную' onClick={this.newLine}>&#9998;</Btn>}
                 {visibleSizeV && <Btn addClass="df-btn df-btn-size-v"hint='вертикальный размер ' onClick={this.addSizeV}>&#8597;</Btn>}
                 {visibleSizeH && <Btn addClass="df-btn df-btn-size-h"hint='горизонтальный размер' onClick={this.addSizeH}>&#8596;</Btn>}

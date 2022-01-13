@@ -106,20 +106,21 @@ export default class GeneratorForm extends React.Component {
 
     render() {
         const {
-            visible, onClose,
+            visible, onClose, stickTo,
         } = this.props;
         const { lines, count } = this.state;
         return (
             <ModalDialog
                 visible = {visible}
-                align = 'custom'
+                align= 'stickTo'
+                stickTo={stickTo}
                 draggable = {true}
-                left = {100}
-                top = {100}
+
                 width = {300}
-                height = {260}
+                height = {210}
                 onClickShadow={onClose}
                 onClickHeaderClose={onClose}
+
                 footer={{
                     close: onClose,
                 }}
@@ -149,5 +150,6 @@ GeneratorForm.defaultProps = {
     visible: true,
     onClose: undefined,
     onChange: undefined,
+    stickTo: '#df-btn-create',
 
 };
