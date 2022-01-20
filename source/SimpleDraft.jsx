@@ -28,6 +28,7 @@ export default class SimpleDraft extends React.Component {
     setDraftData(data) {
         this.draft._beginChange();
         this.draft.data(data);
+        this.data = _.cloneDeep(data);
         this.draft._endChange(false);
     }
 
@@ -97,9 +98,7 @@ export default class SimpleDraft extends React.Component {
         const draft = new Draft(this.draw);
         this.draft = draft;
         draft.addEventChange(this.onDraftChange);
-        draft._beginChange();
-        draft.data(this.props.data);
-        draft._endChange(false);
+        this.setDraftData(this.props.data);
         draft.render();
         this.DraftPanel.set({ draft });
     }
@@ -110,6 +109,9 @@ export default class SimpleDraft extends React.Component {
 
     componentDidUpdate(prevProps, prevState, prevContext) {
         // каждый раз после рендеринга (кроме первого раза !)
+        if (!SimpleDraft._eq(this.data, this.props.data)) {
+            this.setDraftData(this.props.data);
+        }
     }
 
     render() {
