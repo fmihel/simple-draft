@@ -5,6 +5,7 @@ import { DrawUtils } from '../Draw';
 export default class DraftLine extends DraftObject {
     constructor() {
         super();
+        this.name = 'DraftLine';
         this.list = [];
         this.mouse = { x: 0, y: 0 };
         this.gabarit = {
@@ -163,6 +164,7 @@ export default class DraftLine extends DraftObject {
                     this.list = this.list.map((it) => ({ ...it, x: it.x - dx, y: it.y - dy }));
                 }
                 this.fixMouseCoord = { ...o };
+                this.doChange();
             }
             this.nodeHover = this._hoverNode(o.x, o.y);
         }
@@ -287,5 +289,13 @@ export default class DraftLine extends DraftObject {
 
     currentNode() {
         return this.nodeModif;
+    }
+
+    data(set = undefined) {
+        if (set) {
+            this.list = [];
+            this.list = [...set];
+        }
+        return this.list;
     }
 }

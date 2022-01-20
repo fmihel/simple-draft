@@ -39,12 +39,11 @@ export default class DraftPanel extends React.Component {
 
     currentNode() {
         const current = this.current();
-        return (current instanceof DraftLine ? current.currentNode() : false);
+        return ((current && current.name === 'DraftLine') ? current.currentNode() : false);
     }
 
     _onChangeDraft(o) {
-        console.log('draft change', o);
-        const haveLine = this.draft.list.findIndex((it) => it instanceof DraftLine) > -1;
+        const haveLine = this.draft.list.findIndex((it) => it.name === 'DraftLine') > -1;
         const current = this.current();
         const currentNode = this.currentNode();
 
@@ -55,14 +54,14 @@ export default class DraftPanel extends React.Component {
             visibleSizeH: haveLine && !current,
             visibleDelete: current && !currentNode,
             visibleDeleteNode: currentNode,
-            visibleSizeValue: (current instanceof DraftSize),
+            visibleSizeValue: (current && current.name === 'DraftSize'),
             visibleNodeCurve: currentNode && current.isNotBorderNode(currentNode) && currentNode.type === 'line',
             visibleNodeLine: currentNode && current.isNotBorderNode(currentNode) && currentNode.type === 'curve',
 
         }));
 
-        if (o.event === 'select' && current instanceof DraftSize) {
-            this.setState({ sizeValue: current.data.text });
+        if (o.event === 'select' && current && current.name === 'DraftSize') {
+            this.setState({ sizeValue: current._data.text });
         }
     }
 
@@ -98,8 +97,8 @@ export default class DraftPanel extends React.Component {
     onChangeSizeValue(o) {
         this.setState({ sizeValue: o.value });
         const current = this.current();
-        if (current && (current instanceof DraftSize)) {
-            current.data.text = o.value;
+        if (current && current.name === 'DraftSize') {
+            current._data.text = o.value;
         }
     }
 

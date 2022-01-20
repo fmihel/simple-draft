@@ -60,7 +60,6 @@
     "fmihel-server-lib": "^0.1.0",
     "html-webpack-plugin": "^4.3.0",
     "jquery": "^3.5.1",
-    "lodash": "^4.17.16",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "react": "^16.13.1",
@@ -76,6 +75,7 @@
     "webpack-dev-server": "^3.11.3"
   },
   "dependencies": {
-    "fmihel-windeco-components": "^1.5.0"
+    "fmihel-windeco-components": "^1.5.0",
+    "lodash": "^4.17.16"
   }
 }

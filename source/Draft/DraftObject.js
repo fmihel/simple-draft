@@ -3,6 +3,7 @@ export default class DraftObject {
         this.owner = undefined;
         this.state = 'draw';
         this.id = Math.floor(Math.random() * 100000);
+        this.name = 'undef';
     }
 
     underCursor(x, y) {}
@@ -26,6 +27,10 @@ export default class DraftObject {
     }
 
     getGabarit() {
+
+    }
+
+    data(set = undefined) {
 
     }
 

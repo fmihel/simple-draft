@@ -4,6 +4,7 @@ import { DrawUtils } from '../Draw';
 export default class DraftSize extends DraftObject {
     constructor(vert = true) {
         super();
+        this.name = 'DraftSize';
         // this.owner = undefined;
         // this.state = 'draw';
         // this.id = Math.floor(Math.random() * 100000);
@@ -30,11 +31,11 @@ export default class DraftSize extends DraftObject {
                 text: 'xxxx m',
             },
         };
-        this.data = vert ? this.defaultData.vert : this.defaultData.horiz;
+        this._data = vert ? this.defaultData.vert : this.defaultData.horiz;
     }
 
     underCursor(x, y) {
-        const { lines, arrow } = this.data;
+        const { lines, arrow } = this._data;
         let res = false;
         const off = 2;
         // eslint-disable-next-line no-return-assign
@@ -42,7 +43,7 @@ export default class DraftSize extends DraftObject {
             res = res || (DrawUtils.inLine(x, l.x1, l.x2, true, off) && DrawUtils.inLine(y, l.y1, l.y2, true, off));
         });
         if (!res) {
-            if (this.data.vert) {
+            if (this._data.vert) {
                 res = DrawUtils.inLine(y, arrow.a1, arrow.a2, true, off) && DrawUtils.inLine(x, arrow.a - off, arrow.a + off);
             } else {
                 res = DrawUtils.inLine(x, arrow.a1, arrow.a2, true, off) && DrawUtils.inLine(y, arrow.a - off, arrow.a + off);
@@ -52,11 +53,11 @@ export default class DraftSize extends DraftObject {
     }
 
     add(o) {
-        this.data = { ...o };
+        this._data = { ...o };
     }
 
     draw() {
-        const { state, data } = this;
+        const { state, _data: data } = this;
         const d = this.owner.drawer;
         const color = state === 'draw' ? 'gray' : 'red';
 
@@ -109,7 +110,7 @@ export default class DraftSize extends DraftObject {
     }
 
     mouseMove(o) {
-        const { data } = this;
+        const { _data: data } = this;
         const { lines } = data;
         this.mouse = { ...o };
         if (this.state === 'modif') {
@@ -184,6 +185,12 @@ export default class DraftSize extends DraftObject {
     mouseUp(o) {}
 
     getGabarit() {
+    }
 
+    data(set = undefined) {
+        if (set) {
+            this._data = { ...set };
+        }
+        return this._data;
     }
 }

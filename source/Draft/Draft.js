@@ -1,7 +1,9 @@
 import { binds } from 'fmihel-browser-lib';
+import { DraftLine, DraftSize } from '.';
 
 export default class Draft {
     constructor(drawer) {
+        this.name = 'Draft';
         this.drawer = drawer;
         this.list = [];
         this._current = undefined;
@@ -12,6 +14,7 @@ export default class Draft {
         this.drawer.onMouseDown = this.mouseDown;
         this.drawer.onMouseUp = this.mouseUp;
         this.changes = [];
+        this._lockChange = 0;
     }
 
     add(o, asCurrent = false) {
@@ -166,7 +169,51 @@ export default class Draft {
         };
     }
 
+    _beginChange() {
+        this._lockChange++;
+    }
+
     _doChange(o) {
-        this.changes.map((f) => f({ event: 'change', sender: this, ...o }));
+        if (this._lockChange === 0) this.changes.map((f) => f({ event: 'change', sender: this, ...o }));
+    }
+
+    _endChange(doChange = true, param = undefined) {
+        this._lockChange--;
+        if (this._lockChange < 0) console.warn('нарушение стека вызовов блокировки изменений');
+        if (this._lockChange === 0 && doChange) {
+            this._doChange(param);
+        }
+    }
+
+    data(set = undefined) {
+        if (set) {
+            this._beginChange();
+            try {
+                this.clear();
+                set.map((it) => {
+                    const obj = this.newDraftObject(it.name);
+                    if (obj) {
+                        this.add(obj);
+                        obj.data(it.data);
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+            this._endChange();
+        } else {
+            return this.list.map((it) => ({ name: it.name, data: it.data() }));
+        }
+        return undefined;
+    }
+
+    newDraftObject(name, ...params) {
+        if (name === 'DraftLine') {
+            return new DraftLine();
+        }
+        if (name === 'DraftSize') {
+            return new DraftSize(...params);
+        }
+        return undefined;
     }
 }

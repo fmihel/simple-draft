@@ -1,5 +1,6 @@
 import React from 'react';
 import { binds } from 'fmihel-browser-lib';
+import _ from 'lodash';
 import {
     Draft, DraftGenerator,
 } from './Draft';
@@ -21,6 +22,7 @@ export default class SimpleDraft extends React.Component {
             len: '',
             showDialog: false,
         };
+        this.data = [];
     }
 
     onInitDraftPanel(o) {
@@ -28,9 +30,13 @@ export default class SimpleDraft extends React.Component {
     }
 
     onGenerate(o) {
+        this.draft._beginChange();
+
         this.draft.clear();
         const props = { width: this.props.style.width * 0.7, height: this.props.style.height * 0.4 };
         new DraftGenerator(this.draft, props).generate({ nodes: o.nodes });
+
+        this.draft._endChange();
     }
 
     showDialog(show = true) {
@@ -46,8 +52,35 @@ export default class SimpleDraft extends React.Component {
         return false;
     }
 
-    onDraftChange(o) {
+    static _eq(a, b) {
+        const typeA = Array.isArray(a) ? 'array' : typeof a;
+        const typeB = Array.isArray(b) ? 'array' : typeof b;
 
+        if (typeA !== typeB) return false;
+        if (typeA === 'array') {
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; i++) {
+                if (!SimpleDraft._eq(a[i], b[i])) return false;
+            }
+            return true;
+        } if (typeA === 'object') {
+            const keysA = Object.keys(a);
+            const keysB = Object.keys(b);
+            if (keysA.length !== keysB.length) return false;
+            for (let i = 0; i < keysA.length; i++) {
+                if (keysA[i] !== keysB[i]) return false;
+                if (!SimpleDraft._eq(a[keysA[i]], b[keysB[i]])) return false;
+            }
+            return true;
+        }
+        return a === b;
+    }
+
+    onDraftChange(o) {
+        const data = this.draft.data();
+        if (!SimpleDraft._eq(this.data, data)) {
+            this.data = _.cloneDeep(data);
+        }
     }
 
     componentDidMount() {
@@ -118,4 +151,5 @@ SimpleDraft.defaultProps = {
         height: 300,
     },
     onChange: undefined,
+    data: [],
 };
