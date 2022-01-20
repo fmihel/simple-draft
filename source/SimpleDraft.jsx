@@ -76,7 +76,7 @@ export default class SimpleDraft extends React.Component {
         return a === b;
     }
 
-    onDraftChange(o) {
+    onDraftChange() {
         const data = this.draft.data();
         if (!SimpleDraft._eq(this.data, data)) {
             this.data = _.cloneDeep(data);
