@@ -152,6 +152,7 @@ export default class DraftSize extends DraftObject {
                     }
                 }
                 this.fixMouseCoord = { ...o };
+                this.doChange();
             } else {
                 this.nodeModif = undefined;
                 //---

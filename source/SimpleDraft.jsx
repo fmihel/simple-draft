@@ -80,6 +80,8 @@ export default class SimpleDraft extends React.Component {
         const data = this.draft.data();
         if (!SimpleDraft._eq(this.data, data)) {
             this.data = _.cloneDeep(data);
+            // console.log(this.data);
+            if (this.props.onChange) this.props.onChange({ sender: this, data: this.data });
         }
     }
 
@@ -89,6 +91,9 @@ export default class SimpleDraft extends React.Component {
         const draft = new Draft(this.draw);
         this.draft = draft;
         draft.addEventChange(this.onDraftChange);
+        draft._beginChange();
+        draft.data(this.props.data);
+        draft._endChange(false);
         draft.render();
         this.DraftPanel.set({ draft });
     }
@@ -152,4 +157,94 @@ SimpleDraft.defaultProps = {
     },
     onChange: undefined,
     data: [],
+
+    data_example: [
+        {
+            name: 'DraftLine',
+            data: [
+                {
+                    x: -105,
+                    y: 90,
+                    type: 'line',
+                },
+                {
+                    x: -105,
+                    y: -30,
+                    type: 'line',
+                },
+                {
+                    x: 65,
+                    y: -30,
+                    type: 'line',
+                },
+                {
+                    x: 105,
+                    y: -30,
+                    type: 'curve',
+                },
+                {
+                    x: 105.00000000000001,
+                    y: 9.999999999999996,
+                    type: 'line',
+                },
+                {
+                    x: 105,
+                    y: 90,
+                    type: 'line',
+                },
+            ],
+        },
+        {
+            name: 'DraftSize',
+            data: {
+                vert: false,
+                lines: [
+                    {
+                        x1: -105,
+                        y1: 0,
+                        x2: -105,
+                        y2: -70,
+                    },
+                    {
+                        x1: 105,
+                        y1: 0,
+                        x2: 105,
+                        y2: -70,
+                    },
+                ],
+                arrow: {
+                    a: -65,
+                    a1: -105,
+                    a2: 105,
+                },
+                text: 'xxx m',
+            },
+        },
+        {
+            name: 'DraftSize',
+            data: {
+                vert: true,
+                lines: [
+                    {
+                        x2: -135,
+                        y1: -30,
+                        x1: 0,
+                        y2: -30,
+                    },
+                    {
+                        x2: -135,
+                        y1: 100,
+                        x1: 0,
+                        y2: 100,
+                    },
+                ],
+                arrow: {
+                    a: -130,
+                    a2: 100,
+                    a1: -30,
+                },
+                text: 'xxx m',
+            },
+        },
+    ],
 };

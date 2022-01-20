@@ -278,6 +278,7 @@ export default class DraftLine extends DraftObject {
             this.add(c2, i + 2);
             node.type = 'curve';
         }
+        this.doChange();
     }
 
     setNodeAsLine(node) {

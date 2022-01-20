@@ -99,6 +99,7 @@ export default class DraftPanel extends React.Component {
         const current = this.current();
         if (current && current.name === 'DraftSize') {
             current._data.text = o.value;
+            this.draft._doChange();
         }
     }
 
