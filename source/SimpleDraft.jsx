@@ -25,6 +25,12 @@ export default class SimpleDraft extends React.Component {
         this.data = [];
     }
 
+    setDraftData(data) {
+        this.draft._beginChange();
+        this.draft.data(data);
+        this.draft._endChange(false);
+    }
+
     onInitDraftPanel(o) {
         this.DraftPanel = o.sender;
     }
