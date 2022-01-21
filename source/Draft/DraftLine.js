@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import DraftObject from './DraftObject';
-import { DrawUtils } from '../Draw';
+import DrawUtils from '../Draw/DrawUtils';
 
 export default class DraftLine extends DraftObject {
     constructor() {

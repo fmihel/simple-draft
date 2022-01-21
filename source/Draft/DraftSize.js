@@ -11,7 +11,7 @@ export default class DraftSize extends DraftObject {
         this.nodeModif = undefined;
         this.defaultData = {
             horiz: {
-                vert: false,
+                align: 'horiz',
                 lines: [{
                     x1: -50, y1: 10, x2: -50, y2: -35,
                 }, {
@@ -21,7 +21,7 @@ export default class DraftSize extends DraftObject {
                 text: 'xxx m',
             },
             vert: {
-                vert: true,
+                align: 'vert',
                 lines: [{
                     y1: -50, x1: 10, y2: -50, x2: -35,
                 }, {
@@ -31,7 +31,7 @@ export default class DraftSize extends DraftObject {
                 text: 'xxxx m',
             },
         };
-        this._data = vert ? this.defaultData.vert : this.defaultData.horiz;
+        this._data = ((vert === true || vert === 'vert') ? this.defaultData.vert : this.defaultData.horiz);
     }
 
     underCursor(x, y) {
@@ -43,7 +43,7 @@ export default class DraftSize extends DraftObject {
             res = res || (DrawUtils.inLine(x, l.x1, l.x2, true, off) && DrawUtils.inLine(y, l.y1, l.y2, true, off));
         });
         if (!res) {
-            if (this._data.vert) {
+            if (this._data.align === 'vert') {
                 res = DrawUtils.inLine(y, arrow.a1, arrow.a2, true, off) && DrawUtils.inLine(x, arrow.a - off, arrow.a + off);
             } else {
                 res = DrawUtils.inLine(x, arrow.a1, arrow.a2, true, off) && DrawUtils.inLine(y, arrow.a - off, arrow.a + off);
@@ -62,14 +62,14 @@ export default class DraftSize extends DraftObject {
         const color = state === 'draw' ? 'gray' : 'red';
 
         if (state === 'draw') {
-            if (data.vert) {
+            if (data.align === 'vert') {
 
             } else {
 
             }
         } else if (state === 'modif') {
             d.lineWidth(3);
-            if (data.vert) {
+            if (data.align === 'vert') {
                 d.circle(data.lines[0].x1, data.lines[0].y1, 4);
                 d.circle(data.lines[1].x1, data.lines[1].y1, 4);
             } else {
@@ -80,12 +80,12 @@ export default class DraftSize extends DraftObject {
         }
 
         data.lines.map((l) => d.line(l.x1, l.y1, l.x2, l.y2, color));
-        d.arrowVH(data.vert, data.arrow.a, data.arrow.a1, data.arrow.a2, 3, true, true, color);
+        d.arrowVH(data.align === 'vert', data.arrow.a, data.arrow.a1, data.arrow.a2, 3, true, true, color);
 
         const textPos = { x: 0, y: 0 };
         const charW = 5;
         const charH = 12;
-        if (data.vert) {
+        if (data.align === 'vert') {
             textPos.x = data.arrow.a - (data.text.length * charW) / 2;
             textPos.y = (data.arrow.a1 + data.arrow.a2) / 2;
         } else {
@@ -125,7 +125,7 @@ export default class DraftSize extends DraftObject {
                         x2: it.x2 - dx,
                         y2: it.y2 - dy,
                     }));
-                    if (data.vert) {
+                    if (data.align === 'vert') {
                         data.arrow.a -= dx;
                         data.arrow.a1 -= dy;
                         data.arrow.a2 -= dy;
@@ -137,7 +137,7 @@ export default class DraftSize extends DraftObject {
                 } else {
                     //---
                     // eslint-disable-next-line no-lonely-if
-                    if (data.vert) {
+                    if (data.align === 'vert') {
                         data.lines[this.nodeModif].x1 -= dx;
                         data.lines[this.nodeModif].y1 -= dy;
                         data.lines[this.nodeModif].y2 -= dy;

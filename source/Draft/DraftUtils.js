@@ -35,12 +35,13 @@ export default class DraftUtils {
         if (type === 'string') {
             if (DraftUtils.isNumber(v)) {
                 if (!Number.isInteger(v)) {
-                    return parseFloat(v).toFixed(fixed);
+                    return parseFloat(parseFloat(v).toFixed(fixed));
                 }
+                return parseInt(v, 10);
             }
         } else if (type === 'number') {
             if (!Number.isInteger(v)) {
-                return v.toFixed(fixed);
+                return parseFloat(v.toFixed(fixed));
             }
         } else if (type === 'array') {
             return v.map((it) => DraftUtils.fixedNumField(it, fixed));

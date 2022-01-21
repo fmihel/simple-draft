@@ -87,11 +87,11 @@ export default class DraftPanel extends React.Component {
     }
 
     addSizeV() {
-        this.draft.add(new DraftSize(true), true);
+        this.draft.add(new DraftSize('vert'), true);
     }
 
     addSizeH() {
-        this.draft.add(new DraftSize(false), true);
+        this.draft.add(new DraftSize('horiz'), true);
     }
 
     onChangeSizeValue(o) {

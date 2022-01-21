@@ -44,8 +44,8 @@ export default class DraftGenerator {
             });
 
             const w05 = this.default.width / 2;
-            this.draft.add(new DraftSize(false), false).add({
-                vert: false,
+            this.draft.add(new DraftSize('horiz'), false).add({
+                align: 'horiz',
                 lines: [{
                     x1: this.default.start.x - w05,
                     y1: 0,
@@ -67,8 +67,8 @@ export default class DraftGenerator {
             const xmin = this.default.start.x - w05;
             const ytop = this.default.start.y + this.default.height + 10;
             const ybottom = this.default.start.y;
-            this.draft.add(new DraftSize(false), false).add({
-                vert: true,
+            this.draft.add(new DraftSize('vert'), false).add({
+                align: 'vert',
                 lines: [
                     {
                         x2: xmin - 30,

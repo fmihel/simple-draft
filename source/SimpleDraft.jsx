@@ -28,8 +28,9 @@ export default class SimpleDraft extends React.Component {
 
     setDraftData(data) {
         this.draft._beginChange();
-        this.draft.data(data);
-        this.data = _.cloneDeep(data);
+        const setData = DraftUtils.fixedNumField(data);
+        this.draft.data(setData);
+        this.data = setData;
         this.draft._endChange(false);
     }
 
@@ -80,14 +81,18 @@ export default class SimpleDraft extends React.Component {
         this.setDraftData(this.props.data);
         draft.render();
         this.DraftPanel.set({ draft });
+        // console.log('fixed', this.props.data_example[0].data, DraftUtils.fixedNumField(this.props.data_example)[0].data);
     }
 
     componentWillUnmount() {
         // разовый после последнего рендеринга
+        this.draw.free();
+        console.log('free');
     }
 
     componentDidUpdate(prevProps, prevState, prevContext) {
         // каждый раз после рендеринга (кроме первого раза !)
+        // console.log('fixed', DraftUtils.fixedNumField(this.props.data_example));
     }
 
     render() {
@@ -147,12 +152,12 @@ SimpleDraft.defaultProps = {
             name: 'DraftLine',
             data: [
                 {
-                    x: -105,
-                    y: 90,
+                    x: '-105',
+                    y: '90',
                     type: 'line',
                 },
                 {
-                    x: -105,
+                    x: '-105.83920204902',
                     y: -30,
                     type: 'line',
                 },
@@ -181,7 +186,7 @@ SimpleDraft.defaultProps = {
         {
             name: 'DraftSize',
             data: {
-                vert: false,
+                align: 'horiz',
                 lines: [
                     {
                         x1: -105,
@@ -207,7 +212,7 @@ SimpleDraft.defaultProps = {
         {
             name: 'DraftSize',
             data: {
-                vert: true,
+                align: 'vert',
                 lines: [
                     {
                         x2: -135,

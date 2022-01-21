@@ -64,6 +64,7 @@ export default class Draw {
     }
 
     free() {
+        this.animate('free');
         if (this.resizeObserver) {
             this.resizeObserver.disconnect();
         }
@@ -345,7 +346,16 @@ export default class Draw {
     }
 
     animate(event, param) {
-        if (this.timerAnimate) { return; }
+        if (event === 'free') {
+            if (this.timerAnimate) {
+                clearInterval(this.timerAnimate);
+                this.timerAnimate = false;
+            }
+            return;
+        }
+        if (this.timerAnimate) {
+            return;
+        }
         const p = {
             delay: 100,
             stopStep: 0,
@@ -371,6 +381,7 @@ export default class Draw {
                 || ((p.stopTime > 0) && (p.stopTime <= T))
             ) {
                 clearInterval(this.timerAnimate);
+                this.timerAnimate = false;
             }
         }, p.delay);
     }
