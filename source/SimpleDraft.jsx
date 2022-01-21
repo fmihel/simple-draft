@@ -7,6 +7,7 @@ import {
 import { Draw } from './Draw';
 import GeneratorForm from './GeneratorForm/GeneratorForm.jsx';
 import DraftPanel from './DraftPanel/DraftPanel.jsx';
+import DraftUtils from './Draft/DraftUtils';
 
 export default class SimpleDraft extends React.Component {
     constructor(p) {
@@ -59,34 +60,12 @@ export default class SimpleDraft extends React.Component {
         return false;
     }
 
-    static _eq(a, b) {
-        const typeA = Array.isArray(a) ? 'array' : typeof a;
-        const typeB = Array.isArray(b) ? 'array' : typeof b;
-
-        if (typeA !== typeB) return false;
-        if (typeA === 'array') {
-            if (a.length !== b.length) return false;
-            for (let i = 0; i < a.length; i++) {
-                if (!SimpleDraft._eq(a[i], b[i])) return false;
-            }
-            return true;
-        } if (typeA === 'object') {
-            const keysA = Object.keys(a);
-            const keysB = Object.keys(b);
-            if (keysA.length !== keysB.length) return false;
-            for (let i = 0; i < keysA.length; i++) {
-                if (keysA[i] !== keysB[i]) return false;
-                if (!SimpleDraft._eq(a[keysA[i]], b[keysB[i]])) return false;
-            }
-            return true;
-        }
-        return a === b;
-    }
-
     onDraftChange() {
         const data = this.draft.data();
-        if (!SimpleDraft._eq(this.data, data)) {
-            this.data = _.cloneDeep(data);
+
+        if (!DraftUtils.eq(this.data, data)) {
+            // this.data = _.cloneDeep(data);
+            this.data = data;
             // console.log(this.data);
             if (this.props.onChange) this.props.onChange({ sender: this, data: this.data });
         }
@@ -109,9 +88,6 @@ export default class SimpleDraft extends React.Component {
 
     componentDidUpdate(prevProps, prevState, prevContext) {
         // каждый раз после рендеринга (кроме первого раза !)
-        if (!SimpleDraft._eq(this.data, this.props.data)) {
-            this.setDraftData(this.props.data);
-        }
     }
 
     render() {

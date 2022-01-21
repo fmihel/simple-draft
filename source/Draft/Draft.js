@@ -1,5 +1,7 @@
 import { binds } from 'fmihel-browser-lib';
-import { DraftLine, DraftSize } from '.';
+import DraftLine from './DraftLine';
+import DraftSize from './DraftSize';
+import DraftUtils from './DraftUtils';
 
 export default class Draft {
     constructor(drawer) {
@@ -202,7 +204,7 @@ export default class Draft {
             }
             this._endChange();
         } else {
-            return this.list.map((it) => ({ name: it.name, data: it.data() }));
+            return DraftUtils.fixedNumField(this.list.map((it) => ({ name: it.name, data: it.data() })));
         }
         return undefined;
     }
