@@ -113,7 +113,7 @@ export default class SimpleDraft extends React.Component {
                         padding: 0,
                         margin: 0,
                         ...style,
-                        border: '1px dashed red',
+                        border: '1px solid gray',
                     }}
                 >
                     <DraftPanel

@@ -22,11 +22,10 @@ $gap:1px;
         width: $size !important;
         height: $size;
         border-radius: 0px;
-        background-color: rgb(177, 177, 177);
         //color: white;
 
     }    
     .df-btn-delete,.df-btn-delete-node{
-        color:red;
+        color:red !important;
     }
 }
