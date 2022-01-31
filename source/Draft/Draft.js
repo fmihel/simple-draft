@@ -112,7 +112,7 @@ export default class Draft {
     render() {
         this.drawer.animate(() => {
             const draw = this.drawer;
-            draw.grid(10);
+            draw.grid(20);
             draw.color('#ff0000');
             // draw.text('(-20;-30)', -20, -30);
             // draw.circle(-20, -30, 2);

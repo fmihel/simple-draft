@@ -1,5 +1,6 @@
+import './SimpleDraft.scss';
 import React from 'react';
-import { binds } from 'fmihel-browser-lib';
+import { binds, JX } from 'fmihel-browser-lib';
 import _ from 'lodash';
 import {
     Draft, DraftGenerator,
@@ -22,6 +23,11 @@ export default class SimpleDraft extends React.Component {
         this.state = {
             len: '',
             showDialog: false,
+            startBtn: {
+                width: 0,
+                height: 0,
+                display: 'flex',
+            },
         };
         this.data = [];
     }
@@ -70,6 +76,34 @@ export default class SimpleDraft extends React.Component {
             // console.log(this.data);
             if (this.props.onChange) this.props.onChange({ sender: this, data: this.data });
         }
+        this.startBtnResize();
+    }
+
+    startBtnResize() {
+        const visible = this.draft.list.length === 0;
+        if (!visible) {
+            if (this.state.startBtn.display !== 'none') {
+                this.setState({
+                    startBtn: {
+                        ...this.startBtn,
+                        display: 'none',
+                    },
+                });
+            }
+        } else if (this.refCanvas.current) {
+            const dom = this.refCanvas.current;
+            const pos = JX.abs(dom);
+
+            const current = {
+                ...this.state.startBtn,
+                width: pos.w,
+                height: pos.h,
+                display: 'flex',
+            };
+            if (!_.isEqual(this.state.startBtn, current)) {
+                this.setState({ startBtn: current });
+            }
+        }
     }
 
     componentDidMount() {
@@ -82,6 +116,7 @@ export default class SimpleDraft extends React.Component {
         draft.render();
         this.DraftPanel.set({ draft });
         // console.log('fixed', this.props.data_example[0].data, DraftUtils.fixedNumField(this.props.data_example)[0].data);
+        this.startBtnResize();
     }
 
     componentWillUnmount() {
@@ -93,12 +128,14 @@ export default class SimpleDraft extends React.Component {
     componentDidUpdate(prevProps, prevState, prevContext) {
         // каждый раз после рендеринга (кроме первого раза !)
         // console.log('fixed', DraftUtils.fixedNumField(this.props.data_example));
+        this.startBtnResize();
     }
 
     render() {
         const { id, style } = this.props;
         const {
             showDialog,
+            startBtn,
         } = this.state;
         return (
             <React.Fragment>
@@ -121,12 +158,26 @@ export default class SimpleDraft extends React.Component {
                         onShowGenerator={() => {
                             this.showDialog(true);
                         }}
-                    />     <canvas
+                    />
+                    <canvas
                         id={id}
                         ref = {this.refCanvas}
                         onContextMenu={this.onContextMenu}
-
                     />
+                    <div
+                        id="draft-start-btn"
+                        style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            ...startBtn,
+                        }}
+                        onClick={() => {
+                            this.showDialog(true);
+                        }}
+                    >
+                        <div>Нажмите, для создания эскиза..</div>
+                    </div>
                 </div>
                 <GeneratorForm
                     visible={showDialog}

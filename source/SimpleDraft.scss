@@ -1,0 +1,25 @@
+#draft-start-btn{
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: stretch;
+    align-items: center;
+    >div{
+        width: 200px;
+        height: 50px;
+
+        order: 0;
+        flex: 0 1 auto;
+        align-self: auto;
+
+        text-align: center;
+        font-size: 1.8em;
+    }
+    &:hover{
+        text-decoration: underline;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
